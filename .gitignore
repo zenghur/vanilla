@@ -26,3 +26,15 @@
 *.exe
 *.out
 *.app
+
+# Xcode
+*.xcodeproj
+*.xcworkspace
+
+# Mac OS X
+*.DS_Store
+
+# directories
+/bin
+/obj
+

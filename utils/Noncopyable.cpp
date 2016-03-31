@@ -6,4 +6,18 @@
 //
 //
 
-#include <stdio.h>
+#include "Noncopyable.h"
+
+using namespace vanilla;
+
+Noncopyable::Noncopyable()
+{
+    
+}
+
+Noncopyable::~Noncopyable()
+{
+    
+}
+
+
