@@ -4,7 +4,7 @@
 //
 //  Created by ZengHongru on 16/4/1.
 //
-//  In C++11, this is thread-safe method.
+//  In C++11, this is a thread-safe method.
 
 #ifndef Singleton_h
 #define Singleton_h
