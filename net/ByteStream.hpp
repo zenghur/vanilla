@@ -62,7 +62,7 @@ T ByteStream::read(std::size_t nBytes)
 {
     assert(getReadableBytes() >= nBytes);
     T temp = 0;
-    std::copy(getStartReadableAddr(), getStartReadableAddr() + sizeof(T), &temp);
+    std::copy(getStartReadableAddr(), getStartReadableAddr() + sizeof(T), reinterpret_cast<char*>(&temp));
     readIndex_ += nBytes;
     
     if (nBytes == sizeof(int64_t)) {
@@ -92,9 +92,10 @@ void ByteStream::write(T para)
         temp = htobe32(para);
     }
     else if (len == sizeof(int16_t)) {
-        temp = htole16(para);
+        temp = htobe16(para);
     }
-    std::copy(&temp, &temp + len, getStartWritableAddr());
+    char *start = reinterpret_cast<char *>(&temp);
+    std::copy(start, start + len, getStartWritableAddr());
     writeIndex_ += len;
 }
 
