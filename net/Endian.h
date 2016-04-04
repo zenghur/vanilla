@@ -28,7 +28,6 @@
 #define le64toh(x) OSSwapLittleToHostInt64(x)
 
 #elif __linux__
-
 #include <Endian.h>
 
 #define htobe16(x) htobe16(x)

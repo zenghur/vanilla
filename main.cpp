@@ -13,7 +13,13 @@
 
 #include "GenericSingleton.h"
 
+#include <libkern/OSByteOrder.h>
+#include "Endian.h"
+#include <iomanip>
+#include <vector>
+
 using namespace std;
+
 
 struct T {
     T() {
@@ -22,8 +28,13 @@ struct T {
     int i;
 };
 
+void* print(void *para)
+{
+    cout << vanilla::GenericSingleton<T>::getInstance().i <<  endl;
+    return para;
+}
+
 int main()
 {
-    cout << vanila::GenericSingleton<T>::getInstance().i << endl;
-    return 0;
+  
 }

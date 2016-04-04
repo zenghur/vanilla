@@ -11,6 +11,8 @@
 
 #include "Noncopyable.h"
 
+namespace vanilla {
+    
 template <typename T>
 class Singleton : private vanilla::Noncopyable {
 public:
@@ -36,6 +38,8 @@ Singleton<T>::Singleton()
 template <typename T>
 Singleton<T>::~Singleton()
 {
+    
+}
     
 }
 

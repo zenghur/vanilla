@@ -20,7 +20,7 @@
 
 #include <cstdlib>
 
-namespace vanila {
+namespace vanilla {
     
 template <typename T>
 class GenericSingleton : private vanilla::Noncopyable {

@@ -9,6 +9,7 @@ project "Vanilla" -- project name
 	files {"*.cpp", "*.h"}
 	files {"utils/**.cpp"}
 	files {"utils/**.h"}
+	files {"net/**.cpp", "net/**.h"}
 
 	filter "configurations:Debug"
 		defines {"DEBUG"}
