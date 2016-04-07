@@ -8,21 +8,21 @@
 
 #include "Mutex.hpp"
 
+#include <iostream>
+
 
 using namespace vanilla;
 
 Mutex::Mutex()
 {
     if (pthread_mutex_init(&mutex_, NULL)) {
-        // log
+        std::runtime_error("cannot initialize mutex.");
     }
 }
 
 Mutex::~Mutex()
 {
-    if (pthread_mutex_destroy(&mutex_)) {
-        // log
-    }
+    pthread_mutex_destroy(&mutex_);
 }
 
 void Mutex::lock()

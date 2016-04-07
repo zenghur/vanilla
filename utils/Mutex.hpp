@@ -9,7 +9,7 @@
 #ifndef Mutex_hpp
 #define Mutex_hpp
 
-#include "Noncopyable.cpp"
+#include "Noncopyable.h"
 
 #include <pthread.h>
 #include <unistd.h>

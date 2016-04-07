@@ -54,7 +54,7 @@ private:
     std::size_t readIndex_;
     std::size_t writeIndex_;
     const static std::size_t headerSize_ = 8;
-    const static std::size_t contentSize_ = 32 * 1024;
+    const static std::size_t contentSize_ = 12;
 };
     
 template <typename T>
