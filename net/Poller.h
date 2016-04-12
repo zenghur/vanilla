@@ -6,33 +6,36 @@
 #include <unistd.h>
 // 分别封装kqueue和epoll
 
-namespace vanilla {
-    
+
 enum class POLLER_EVENT {
-    eIn,
-    eOut
+    ePOLLER_IN,
+    ePOLLER_OUT,
 };
     
 class Poller {
 public:
     virtual void poll() = 0;
-    virtual void registerFd(int fd, POLLER_EVENT event, void *udata) = 0;
-    virtual void unRegisterFd(int fd, POLLER_EVENT event, void *udata) = 0;
+    virtual void addFd(int fd, POLLER_EVENT event, void *udata) = 0;
+    virtual void deleteFd(int fd, POLLER_EVENT event, void *udata) = 0;
+    virtual void modFd(int fd, POLLER_EVENT event, void *udata) = 0;
     virtual ~Poller() {};
 };
     
 #ifdef __APPLE__
 #include <sys/event.h>
-    
+
+// kernel event queue
 class Kqueue : public Poller, private vanilla::Noncopyable {
 public:
     Kqueue();
-    bool  init();
+    void  init();
     ~Kqueue();
 public:
-    virtual void registerFd(int fd, POLLER_EVENT event, void *udata);
-    virtual void unRegisterFd(int fd, POLLER_EVENT event, void *udata);
+    virtual void addFd(int fd, POLLER_EVENT event, void *udata);
+    virtual void deleteFd(int fd, POLLER_EVENT event, void *udata);
+    virtual void modFd(int fd, POLLER_EVENT event, void *udata);
 private:
+    static struct timespec timeout;
     static const int MAX_EVENTS_ = 30;
     struct kevent events_[MAX_EVENTS_];
     int fd_;
@@ -43,11 +46,11 @@ private:
 class Epoll : public Poller, private vanilla::Noncopyable {
 public:
 private:
-    int fd;
+    int fd_;
 };
 #endif
     
-}
+
 
 
 #endif
