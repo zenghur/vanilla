@@ -8,22 +8,17 @@
 
 
 enum class POLLER_EVENT {
-    ePOLLER_IN,
-    ePOLLER_OUT,
+    ePOLLER_IN = 0x01,
+    ePOLLER_OUT = 0x10,
 };
 
-enum class POLLER_OPERATION {
-    ePOLLER_ADD,
-    ePOLLER_DELETE
-};
-    
 class Poller {
 public:
     virtual void poll() = 0;
     virtual void init() = 0;
-    virtual void addFd(int fd, POLLER_EVENT event, void *udata) = 0;
-    virtual void deleteFd(int fd, POLLER_EVENT event, void *udata) = 0;
-    virtual void modFd(int fd, POLLER_EVENT event, POLLER_OPERATION operation, void *udata) = 0;
+    virtual void addFd(int fd, int mask, void *udata) = 0;
+    virtual void deleteFd(int fd, int mask, void *udata) = 0;
+    virtual void modFd(int fd, int mask, void *udata) = 0;
     virtual ~Poller() {};
 };
     
@@ -37,9 +32,9 @@ public:
     ~Kqueue();
 public:
     virtual void init();
-    virtual void addFd(int fd, POLLER_EVENT event, void *udata);
-    virtual void deleteFd(int fd, POLLER_EVENT event, void *udata);
-    virtual void modFd(int fd, POLLER_EVENT event, POLLER_OPERATION operation, void *udata);
+    virtual void addFd(int fd, int mask, void *udata);
+    virtual void deleteFd(int fd, int mask, void *udata);
+    virtual void modFd(int fd, int mask, void *udata);
     virtual void poll();
 private:
     static struct timespec timeout;
