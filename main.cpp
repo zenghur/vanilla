@@ -10,31 +10,34 @@
 #include <sys/types.h>
 #include <pthread.h>
 #include <iostream>
-
-#include "GenericSingleton.h"
-
-#include <libkern/OSByteOrder.h>
-#include "Endian.h"
-#include <iomanip>
-#include <vector>
+#include <cassert>
 
 using namespace std;
 
-
-struct T {
-    T() {
-        i = 3;
-    }
-    int i;
-};
-
-void* print(void *para)
+int parseDate(const char* str)
 {
-    cout << vanilla::GenericSingleton<T>::getInstance().i <<  endl;
-    return para;
+    if(NULL == str)
+        return -1;
+    
+    if( strlen(str) == 0)
+        return -1 ;
+    
+    tm  date={0};
+    strptime(str, "%Y-%m-%d %H:%M:%S", &date);
+    return (int)mktime(&date);
+}
+
+
+time_t getDiffSeconds(string lhs, string rhs)
+{
+    time_t leftTime = parseDate(lhs.c_str());
+    time_t rightTime = parseDate(rhs.c_str());
+    
+    return rightTime - leftTime;
 }
 
 int main()
 {
-  
+    cout << getDiffSeconds("2016-04-18 00:05:00", "2016-04-13 15:00") << endl;
+    return 0;
 }
