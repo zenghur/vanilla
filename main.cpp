@@ -3,8 +3,8 @@
 #include <unistd.h>
 #include <iostream>
 #include <cassert>
-#include <thread>
 
+#include <pthread.h>
 
 using namespace std;
 

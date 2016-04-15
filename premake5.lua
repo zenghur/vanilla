@@ -6,10 +6,10 @@ project "Vanilla" -- project name
 	language "C++" 
 	targetdir "bin/"
 
-	files {"*.cpp", "*.h"}
-	files {"utils/**.cpp"}
+	files {"*.cpp", "*.h", "*hpp"}
+	files {"utils/**.cpp", "utils/**.hpp"}
 	files {"utils/**.h"}
-	files {"net/**.cpp", "net/**.h"}
+	files {"net/**.cpp", "net/**.h", "net/**.hpp"}
 
 	filter "configurations:Debug"
 		defines {"DEBUG"}
