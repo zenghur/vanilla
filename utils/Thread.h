@@ -7,6 +7,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+
+
 #include "Noncopyable.h"
 
 namespace vanilla {
@@ -21,11 +23,12 @@ public:
     void detach();
     void exit();
     pthread_t getId();
+    void cancel();
     ~Thread();
 private:
     bool joinable_;
     bool detached_;
-    pthread_t id_;
+    pthread_t handle_;
     
 };
     

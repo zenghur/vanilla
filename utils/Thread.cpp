@@ -6,25 +6,25 @@ using namespace vanilla;
 
 Thread::Thread(): joinable_(true),
                   detached_(true),
-                  id_(0)
+                  handle_(0)
 {
     
 }
 
 void Thread::start(ThreadStartFun fun, void *para)
 {
-    pthread_create(&id_, NULL, fun, para);
+    pthread_create(&handle_, NULL, fun, para);
 }
 
 void Thread::join()
 {
-    pthread_join(id_, NULL);
+    pthread_join(handle_, NULL);
 }
 
 
 void Thread::detach()
 {
-    pthread_detach(id_);
+    pthread_detach(handle_);
 }
 
 void Thread::exit()
@@ -35,6 +35,11 @@ void Thread::exit()
 pthread_t Thread::getId()
 {
     return pthread_self();
+}
+
+void Thread::cancel()
+{
+    pthread_cancel(handle_);
 }
 
 Thread::~Thread()
