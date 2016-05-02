@@ -17,7 +17,7 @@
 #include <sys/event.h>
 
 // kernel event queue
-class Kqueue : public vanilla::Poller, private vanilla::Noncopyable {
+class Kqueue : public vanilla::Poller {
 public:
     Kqueue();
     virtual ~Kqueue();

@@ -1,12 +1,6 @@
-//
-//  Thread.cpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/4/11.
-//
-//
+// @author: zenghongru@gmail.com
 
-#include "Thread.hpp"
+#include "Thread.h"
 
 using namespace vanilla;
 

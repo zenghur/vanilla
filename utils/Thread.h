@@ -1,13 +1,7 @@
-//
-//  Thread.hpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/4/11.
-//
-//
+// @author: zenghongru@gmail.com
 
-#ifndef Thread_hpp
-#define Thread_hpp
+#ifndef THREAD_H
+#define THREAD_H
 
 #include <pthread.h>
 #include <sys/types.h>
@@ -38,6 +32,4 @@ private:
 }
 
 
-
-
-#endif /* Thread_hpp */
+#endif
