@@ -6,7 +6,7 @@
 //
 //
 
-#include "MutexLockGuard.hpp"
+#include "MutexLockGuard.h"
 
 using namespace vanilla;
 

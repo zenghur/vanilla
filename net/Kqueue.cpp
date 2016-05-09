@@ -7,7 +7,7 @@
 //
 
 #include "Kqueue.h"
-#include "Error.hpp"
+#include "Error.h"
 #include "DateTime.h"
 
 #include <unistd.h>

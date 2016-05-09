@@ -10,7 +10,7 @@
 #define MutexLockGuard_hpp
 
 #include "Noncopyable.h"
-#include "Mutex.hpp"
+#include "Mutex.h"
 
 namespace vanilla {
 
