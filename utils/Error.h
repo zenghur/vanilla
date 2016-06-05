@@ -11,9 +11,11 @@
 
 #include <stdio.h>
 
+#include <string>
+
 namespace vanilla {
 
-void printError();
+void printError(std::string reason = "");
     
 }
 
