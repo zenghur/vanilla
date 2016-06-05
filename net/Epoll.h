@@ -12,7 +12,7 @@
 #ifdef __linux__
 #include <sys/epoll.h>
 
-class Epoll : public Poller, private vanilla::Noncopyable {
+class Epoll : public Poller {
 public:
     Epoll();
     virtual ~Epoll();

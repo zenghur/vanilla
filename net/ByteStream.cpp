@@ -6,7 +6,7 @@
 //
 //
 
-#include "ByteStream.hpp"
+#include "ByteStream.h"
 
 #include <cassert>
 

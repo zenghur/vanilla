@@ -15,7 +15,7 @@
 
 #include "Endian.h"
 
-// 头部预留headerSize_个字节用于网络通信协议ID，理论上可以支持2^64个协议，范围是0 － 2^64 - 1
+// 头部预留headerSize_个字节
 
 namespace vanilla {
 
