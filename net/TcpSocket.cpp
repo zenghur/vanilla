@@ -12,9 +12,13 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/fcntl.h>
+#include <netdb.h>
 
 #include <iostream>
+#include <sstream>
 #include <cassert>
+#include <err.h>
+
 
 #include "TcpSocket.h"
 #include "SocketOption.h"
@@ -51,27 +55,34 @@ int TcpSocket::getSocketFd()
     return sockfd_;
 }
 
-void TcpSocket::setNonBlock()
+void TcpSocket::setNonBlocking(bool flag)
 {
-    if (sockfd_ < 0) {
+    isNonBlocking_ = flag;
+}
+
+bool TcpSocket::getNonBlocking()
+{
+    return isNonBlocking_;
+}
+
+void TcpSocket::setNonBlock(int fd)
+{
+    if (fd < 0) {
         return;
     }
     
-    int flags = fcntl(sockfd_, F_GETFL, 0);
+    int flags = fcntl(fd, F_GETFL, 0);
     if (flags < 0) {
         printError();
     }
     
-    flags = fcntl(sockfd_, F_SETFL, flags | O_NONBLOCK);
+    flags = fcntl(fd, F_SETFL, flags | O_NONBLOCK);
     if (flags < 0) {
         printError();
     }
-    
-    isNonBlocking_ = true;
-    
 }
 
-TcpSocket* TcpSocket::createListener(std::string ip, uint16_t port)
+std::shared_ptr<TcpSocket> TcpSocket::createListener(std::string ip, uint16_t port)
 {
     int fd = socket(PF_INET, SOCK_STREAM, 0);
     if (fd < 0) {
@@ -105,17 +116,24 @@ TcpSocket* TcpSocket::createListener(std::string ip, uint16_t port)
         printError();
     }
     
-    return new TcpSocket(fd);
+    return std::shared_ptr<TcpSocket>(new TcpSocket(fd));
 }
 
-TcpSocket* TcpSocket::createConnector(std::string ip, uint16_t port)
+std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint16_t port)
 {
     int fd = socket(PF_INET, SOCK_STREAM, 0);
     if (fd < 0) {
         printError();
     }
     
-    return new TcpSocket(fd);
+    setNonBlock(fd);
+    
+        
+    
+    std::shared_ptr<TcpSocket> socket = std::make_shared<TcpSocket>(fd);
+    socket->setNonBlocking(true);
+    
+    return socket;
 }
 
 int TcpSocket::nonBlockSend(char *data, size_t len)
@@ -165,8 +183,8 @@ int TcpSocket::blockSend(char *data, size_t len)
 {
     assert(!isNonBlocking_);
     
-    int ret;
-    while (len != 0 && (ret = ::send(sockfd_, data, len, 0))) {
+    ssize_t ret;
+    while (len != 0 && (ret = ::send(sockfd_, data, len, 0)) != 0) {
         if (ret == -1 && errno == EINTR) {
             continue;
         }
@@ -176,15 +194,15 @@ int TcpSocket::blockSend(char *data, size_t len)
         data += ret;
         len -= ret;
     }
-    return 0;
+    return static_cast<int>(len);
 }
 
 int TcpSocket::blockRecv(char *data, size_t len)
 {
     assert(!isNonBlocking_);
     
-    int ret = 0;
-    while (len != 0 && (ret == ::recv(sockfd_, data, len, 0))) {
+    ssize_t ret;
+    while (len != 0 && (ret == ::recv(sockfd_, data, len, 0)) != 0) {
         if (ret == -1 && errno == EINTR) {
             continue;
         }
@@ -194,6 +212,6 @@ int TcpSocket::blockRecv(char *data, size_t len)
         data += ret;
         len -= ret;
     }
-    return ret;
+    return static_cast<int>(len);
 }
 

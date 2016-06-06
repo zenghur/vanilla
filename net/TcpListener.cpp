@@ -17,12 +17,12 @@ TcpListener::TcpListener()
 
 int TcpListener::getListenerFd()
 {
-    return socket_.getSocketFd();
+    return socket_->getSocketFd();
 }
 
 void TcpListener::listen(std::string ip, uint16_t port)
 {
-    socket_.createListener(ip, port);
+    socket_ = TcpSocket::createListener(ip, port);
 }
 
 void TcpListener::canRead()

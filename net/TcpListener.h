@@ -26,7 +26,7 @@ public:
     virtual void canRead();
     virtual void canWrite();
 private:
-    TcpSocket socket_;
+    std::shared_ptr<TcpSocket> socket_;
 };
     
     

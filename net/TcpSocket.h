@@ -35,10 +35,12 @@ public:
     
     int getSocketFd();
     
-    void setNonBlock();
+    static void setNonBlock(int fd);
+    void setNonBlocking(bool flag);
+    bool getNonBlocking();
 public:
-    static TcpSocket* createListener(std::string ip, uint16_t port);
-    static TcpSocket* createConnector(std::string ip, uint16_t port);
+    static std::shared_ptr<TcpSocket> createListener(std::string ip, uint16_t port);
+    static std::shared_ptr<TcpSocket> createConnector(std::string peerName, uint16_t port);
 private:
     bool isNonBlocking_;
     int sockfd_;
