@@ -12,7 +12,7 @@ project "Vanilla" -- project name
 	files {"net/**.cpp", "net/**.h", "net/**.hpp"}
 	files {"shared/glog/**.h"}
 	libdirs {"shared/libs/"}
-	links {"glog"}
+	--links {"glog"}
 	
 	
 	

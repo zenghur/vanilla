@@ -13,12 +13,10 @@
 #include <sys/errno.h>
 #include <stdlib.h>
 
-
-
 void vanilla::printError(std::string reason)
 {
     if (reason.empty()) {
-        perror(strerror(errno));
+         perror(strerror(errno));
     }
     else {
         perror(reason.c_str());

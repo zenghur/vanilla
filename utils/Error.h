@@ -10,6 +10,7 @@
 #define Error_hpp
 
 #include <stdio.h>
+#include <string>
 
 #include <string>
 

@@ -11,8 +11,10 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/fcntl.h>
 
 #include <iostream>
+#include <cassert>
 
 #include "TcpSocket.h"
 #include "SocketOption.h"
@@ -21,9 +23,16 @@
 
 using namespace vanilla;
 
-TcpSocket::TcpSocket(int fd)
+TcpSocket::TcpSocket(int fd): sockfd_(fd),
+                              isNonBlocking_(false),
+                              sendBuf_(SND_BUF),
+                              sendBufStartIndex_(0),
+                              sendLen_(0),
+                              recvBuf_(RCV_BUF),
+                              recvBufStartIndex_(0),
+                              recvLen_(0)
 {
-    sockfd_ = fd;
+   
 }
 
 TcpSocket::~TcpSocket()
@@ -42,7 +51,27 @@ int TcpSocket::getSocketFd()
     return sockfd_;
 }
 
-int TcpSocket::createListener(std::string ip, uint16_t port)
+void TcpSocket::setNonBlock()
+{
+    if (sockfd_ < 0) {
+        return;
+    }
+    
+    int flags = fcntl(sockfd_, F_GETFL, 0);
+    if (flags < 0) {
+        printError();
+    }
+    
+    flags = fcntl(sockfd_, F_SETFL, flags | O_NONBLOCK);
+    if (flags < 0) {
+        printError();
+    }
+    
+    isNonBlocking_ = true;
+    
+}
+
+TcpSocket* TcpSocket::createListener(std::string ip, uint16_t port)
 {
     int fd = socket(PF_INET, SOCK_STREAM, 0);
     if (fd < 0) {
@@ -76,16 +105,95 @@ int TcpSocket::createListener(std::string ip, uint16_t port)
         printError();
     }
     
-    return fd;
+    return new TcpSocket(fd);
 }
 
-int TcpSocket::createConnector(std::string ip, uint16_t port)
+TcpSocket* TcpSocket::createConnector(std::string ip, uint16_t port)
 {
     int fd = socket(PF_INET, SOCK_STREAM, 0);
     if (fd < 0) {
         printError();
     }
     
-    return fd;
+    return new TcpSocket(fd);
+}
+
+int TcpSocket::nonBlockSend(char *data, size_t len)
+{
+    assert(isNonBlocking_);
+    
+    ssize_t nBytes = ::send(sockfd_, data, len, 0);
+    
+    // 3种情况
+    if (nBytes == -1 && (errno == EWOULDBLOCK || errno == EAGAIN || errno == EINTR)) {
+        return 0;
+    }
+    
+    if (nBytes == -1) {
+        return -1;
+    }
+    
+    if (nBytes == 0) {
+        return 0;
+    }
+    
+    return static_cast<int>(nBytes);
+}
+
+int TcpSocket::nonBlockRecv(char *data, size_t len)
+{
+    assert(isNonBlocking_);
+
+    ssize_t nBytes = ::recv(sockfd_, data, len, 0);
+    
+    if ((nBytes == -1) && (errno == EWOULDBLOCK || errno == EAGAIN || errno == EINTR)) {
+        return 0;
+    }
+    
+    if (nBytes == -1) {
+        return -1;
+    }
+    
+    if (nBytes == 0) {
+        return 0;
+    }
+    
+    return static_cast<int>(nBytes);
+}
+
+int TcpSocket::blockSend(char *data, size_t len)
+{
+    assert(!isNonBlocking_);
+    
+    int ret;
+    while (len != 0 && (ret = ::send(sockfd_, data, len, 0))) {
+        if (ret == -1 && errno == EINTR) {
+            continue;
+        }
+        else {
+            break;
+        }
+        data += ret;
+        len -= ret;
+    }
+    return 0;
+}
+
+int TcpSocket::blockRecv(char *data, size_t len)
+{
+    assert(!isNonBlocking_);
+    
+    int ret = 0;
+    while (len != 0 && (ret == ::recv(sockfd_, data, len, 0))) {
+        if (ret == -1 && errno == EINTR) {
+            continue;
+        }
+        else {
+            break;
+        }
+        data += ret;
+        len -= ret;
+    }
+    return ret;
 }
 
