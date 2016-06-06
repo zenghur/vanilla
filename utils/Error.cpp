@@ -13,8 +13,14 @@
 #include <sys/errno.h>
 #include <stdlib.h>
 
-void vanilla::printError()
+
+void vanilla::printError(std::string reason)
 {
-    perror(strerror(errno));
+    if (reason.empty()) {
+         perror(strerror(errno));
+    }
+    else {
+        perror(reason.c_str());
+    }
     exit(EXIT_FAILURE);
 }
