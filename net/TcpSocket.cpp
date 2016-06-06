@@ -163,11 +163,37 @@ int TcpSocket::nonBlockRecv(char *data, size_t len)
 
 int TcpSocket::blockSend(char *data, size_t len)
 {
+    assert(!isNonBlocking_);
     
+    int ret;
+    while (len != 0 && (ret = ::send(sockfd_, data, len, 0))) {
+        if (ret == -1 && errno == EINTR) {
+            continue;
+        }
+        else {
+            break;
+        }
+        data += ret;
+        len -= ret;
+    }
+    return 0;
 }
 
 int TcpSocket::blockRecv(char *data, size_t len)
 {
+    assert(!isNonBlocking_);
     
+    int ret = 0;
+    while (len != 0 && (ret == ::recv(sockfd_, data, len, 0))) {
+        if (ret == -1 && errno == EINTR) {
+            continue;
+        }
+        else {
+            break;
+        }
+        data += ret;
+        len -= ret;
+    }
+    return ret;
 }
 
