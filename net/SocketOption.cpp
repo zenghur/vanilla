@@ -60,3 +60,46 @@ int SocketOption::getRcvBuf(int fd)
     }
     return optval;
 }
+
+int SocketOption::setSndTimeO(int fd, struct timeval val)
+{
+    int flag = setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, static_cast<const struct timeval *>(&val), sizeof(val));
+    if (flag < 0) {
+        printError();
+    }
+    return flag;
+}
+
+int SocketOption::setRcvTimeO(int fd, struct timeval val)
+{
+    int flag = setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, static_cast<const struct timeval *>(&val), sizeof(val));
+    if (flag < 0) {
+        printError();
+    }
+    return flag;
+}
+
+struct timeval SocketOption::getSndTimeO(int fd)
+{
+    struct timeval val;
+    socklen_t len;
+    int flag = getsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, static_cast<struct timeval *>(&val), &len);
+    if (flag < 0) {
+        printError();
+    }
+    return val;
+}
+
+struct timeval SocketOption::getRcvTimeO(int fd)
+{
+    struct timeval val;
+    socklen_t len;
+    int flag = getsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, static_cast<struct timeval *>(&val), &len);
+    if (flag < 0) {
+        printError();
+    }
+    return val;
+}
+
+
+

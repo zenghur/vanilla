@@ -30,6 +30,9 @@ public:
     int nonBlockSend(char *data, size_t len);
     int nonBlockRecv(char *data, size_t len);
     
+    int blockSend(char *data, size_t len);
+    int blockRecv(char *data, size_t len);
+    
     int getSocketFd();
     
     void setNonBlock();

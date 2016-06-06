@@ -161,3 +161,13 @@ int TcpSocket::nonBlockRecv(char *data, size_t len)
     return static_cast<int>(nBytes);
 }
 
+int TcpSocket::blockSend(char *data, size_t len)
+{
+    
+}
+
+int TcpSocket::blockRecv(char *data, size_t len)
+{
+    
+}
+
