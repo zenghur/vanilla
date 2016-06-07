@@ -35,9 +35,10 @@ public:
     
     int getSocketFd();
     
-    static void setNonBlock(int fd);
-    void setNonBlocking(bool flag);
-    bool getNonBlocking();
+    static void makeNonBlock(int fd);
+    void setNonBlockStatus(bool flag);
+    bool getNonBlockStatus();
+    
 public:
     static std::shared_ptr<TcpSocket> createListener(std::string ip, uint16_t port);
     static std::shared_ptr<TcpSocket> createConnector(std::string peerName, uint16_t port);

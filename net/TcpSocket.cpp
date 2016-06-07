@@ -55,17 +55,17 @@ int TcpSocket::getSocketFd()
     return sockfd_;
 }
 
-void TcpSocket::setNonBlocking(bool flag)
+void TcpSocket::setNonBlockStatus(bool flag)
 {
     isNonBlocking_ = flag;
 }
 
-bool TcpSocket::getNonBlocking()
+bool TcpSocket::getNonBlockStatus()
 {
     return isNonBlocking_;
 }
 
-void TcpSocket::setNonBlock(int fd)
+void TcpSocket::makeNonBlock(int fd)
 {
     if (fd < 0) {
         return;
@@ -126,12 +126,12 @@ std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint
         printError();
     }
     
-    setNonBlock(fd);
+    makeNonBlock(fd);
     
         
     
     std::shared_ptr<TcpSocket> socket = std::make_shared<TcpSocket>(fd);
-    socket->setNonBlocking(true);
+    socket->setNonBlockStatus(true);
     
     return socket;
 }
@@ -184,6 +184,7 @@ int TcpSocket::blockSend(char *data, size_t len)
     assert(!isNonBlocking_);
     
     ssize_t ret;
+    
     while (len != 0 && (ret = ::send(sockfd_, data, len, 0)) != 0) {
         if (ret == -1 && errno == EINTR) {
             continue;
@@ -202,6 +203,7 @@ int TcpSocket::blockRecv(char *data, size_t len)
     assert(!isNonBlocking_);
     
     ssize_t ret;
+
     while (len != 0 && (ret == ::recv(sockfd_, data, len, 0)) != 0) {
         if (ret == -1 && errno == EINTR) {
             continue;

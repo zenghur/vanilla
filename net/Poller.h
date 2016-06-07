@@ -11,8 +11,8 @@
 namespace vanilla {
     
 enum class PollerEvent: int8_t {
-    POLLER_IN = 0x01,
-    POLLER_OUT = 0x10
+    POLLER_IN = 0x01, // readable
+    POLLER_OUT = 0x10 // writable
 };
     
 class Poller : private vanilla::Noncopyable {
