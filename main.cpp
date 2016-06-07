@@ -3,6 +3,9 @@
 #include <unistd.h>
 #include "TcpSocket.h"
 #include "SocketOption.h"
+#include <vector>
+#include "Poller.h"
+#include "TcpListener.h"
 
 
 #include <iostream>
@@ -13,6 +16,13 @@ using namespace vanilla;
 int
 main(void)
 {
+    TcpListener listener;
+    listener.listen("127.0.0.1", 15000);
+    std::unique_ptr<Poller> poller = Poller::createPoller();
+    poller->addFd(listener.getListenerFd(), PollerEvent::POLLER_IN, &listener);
+    while (true) {
+        poller->poll();
+    }
     return 0;
 }
 

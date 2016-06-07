@@ -9,6 +9,7 @@
 #include "Kqueue.h"
 #include "Error.h"
 #include "DateTime.h"
+#include "IOEvent.h"
 
 #include <unistd.h>
 #include <time.h>
@@ -36,18 +37,18 @@ void Kqueue::init()
     }
 }
 
-void Kqueue::addFd(int fd, int mask, void *udata)
+void Kqueue::addFd(int fd, PollerEvent mask, void *udata)
 {
     struct kevent event;
     
-    if (mask & static_cast<int8_t>(PollerEvent::POLLER_IN)) {
+    if (static_cast<int8_t>(mask) & static_cast<int8_t>(PollerEvent::POLLER_IN)) {
         EV_SET(&event, fd, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, udata);
         if (kevent(kqfd_, &event, 1, NULL, 0, NULL) == -1) {
             printError();
         }
     }
     
-    if (mask & static_cast<int8_t>(PollerEvent::POLLER_OUT) ) {
+    if (static_cast<int8_t>(mask) & static_cast<int8_t>(PollerEvent::POLLER_OUT) ) {
         EV_SET(&event, fd, EVFILT_WRITE, EV_ADD | EV_CLEAR, 0, 0, udata);
         if (kevent(kqfd_, &event, 1, NULL, 0, NULL) == -1) {
             printError();
@@ -55,18 +56,18 @@ void Kqueue::addFd(int fd, int mask, void *udata)
     }
 }
 
-void Kqueue::deleteFd(int fd, int mask)
+void Kqueue::deleteFd(int fd, PollerEvent mask)
 {
     struct kevent event;
     
-    if (mask & static_cast<int8_t>(PollerEvent::POLLER_IN)) {
+    if (static_cast<int8_t>(mask) & static_cast<int8_t>(PollerEvent::POLLER_IN)) {
         EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
         if (kevent(kqfd_, &event, 1, NULL, 0, NULL) == -1) {
             printError();
         }
     }
     
-    if (mask & static_cast<int8_t>(PollerEvent::POLLER_OUT)) {
+    if (static_cast<int8_t>(mask) & static_cast<int8_t>(PollerEvent::POLLER_OUT)) {
         EV_SET(&event, fd, EVFILT_WRITE, EV_DELETE, 0, 0, NULL);
         if (kevent(kqfd_, &event, 1, NULL, 0, NULL) == -1) {
             printError();
@@ -74,11 +75,11 @@ void Kqueue::deleteFd(int fd, int mask)
     }
 }
 
-void Kqueue::modFd(int fd, int mask, void *udata)
+void Kqueue::modFd(int fd, PollerEvent mask, void *udata)
 {
     struct kevent event;
     
-    if (mask & static_cast<int8_t>(PollerEvent::POLLER_IN)) {
+    if (static_cast<int8_t>(mask) & static_cast<int8_t>(PollerEvent::POLLER_IN)) {
         EV_SET(&event, fd, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, udata);
     }
     else {
@@ -89,7 +90,7 @@ void Kqueue::modFd(int fd, int mask, void *udata)
         printError();
     }
     
-    if (mask & static_cast<int8_t>(PollerEvent::POLLER_OUT)) {
+    if (static_cast<int8_t>(mask) & static_cast<int8_t>(PollerEvent::POLLER_OUT)) {
         EV_SET(&event, fd, EVFILT_WRITE, EV_ADD | EV_CLEAR, 0, 0, udata);
       
     }
@@ -111,8 +112,10 @@ void Kqueue::poll()
     }
 
     for (size_t index = 0; index < n; ++index) {
+        IOEvent *io = (IOEvent *)events_[index].udata;
+        
         if (events_[index].filter == EVFILT_READ) {
-            
+            io->canRead();
         }
         
         if (events_[index].filter == EVFILT_WRITE) {
