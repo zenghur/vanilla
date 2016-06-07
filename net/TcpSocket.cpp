@@ -51,24 +51,31 @@ int TcpSocket::getSocketFd()
     return sockfd_;
 }
 
-void TcpSocket::setNonBlock()
+void TcpSocket::makeNonBlock(int fd)
 {
-    if (sockfd_ < 0) {
+    if (fd < 0) {
         return;
     }
     
-    int flags = fcntl(sockfd_, F_GETFL, 0);
+    int flags = fcntl(fd, F_GETFL, 0);
     if (flags < 0) {
         printError();
     }
     
-    flags = fcntl(sockfd_, F_SETFL, flags | O_NONBLOCK);
+    flags = fcntl(fd, F_SETFL, flags | O_NONBLOCK);
     if (flags < 0) {
         printError();
     }
-    
-    isNonBlocking_ = true;
-    
+}
+
+void TcpSocket::setNonBlockStatus(bool flag)
+{
+    isNonBlocking_ = flag;
+}
+
+bool TcpSocket::getNonBlockStatus()
+{
+    return isNonBlocking_;
 }
 
 TcpSocket* TcpSocket::createListener(std::string ip, uint16_t port)
@@ -166,7 +173,7 @@ int TcpSocket::blockSend(char *data, size_t len)
     assert(!isNonBlocking_);
     
     int ret;
-    while (len != 0 && (ret = ::send(sockfd_, data, len, 0))) {
+    while (len != 0 && (ret = ::send(sockfd_, data, len, 0)) != 0) {
         if (ret == -1 && errno == EINTR) {
             continue;
         }
@@ -183,8 +190,8 @@ int TcpSocket::blockRecv(char *data, size_t len)
 {
     assert(!isNonBlocking_);
     
-    int ret = 0;
-    while (len != 0 && (ret == ::recv(sockfd_, data, len, 0))) {
+    int ret;
+    while (len != 0 && (ret == ::recv(sockfd_, data, len, 0)) != 0) {
         if (ret == -1 && errno == EINTR) {
             continue;
         }

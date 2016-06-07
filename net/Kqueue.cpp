@@ -19,7 +19,7 @@ using namespace vanilla;
 
 Kqueue::Kqueue(): kqfd_(-1)
 {
-    events.resize(MAX_EVENTS);
+    events_.resize(MAX_EVENTS);
 }
 
 Kqueue::~Kqueue()
@@ -41,14 +41,14 @@ void Kqueue::addFd(int fd, int mask, void *udata)
     struct kevent event;
     
     if (mask & static_cast<int8_t>(PollerEvent::POLLER_IN)) {
-        EV_SET(&event, fd, EVFILT_READ, EV_ADD, 0, 0, udata);
+        EV_SET(&event, fd, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, udata);
         if (kevent(kqfd_, &event, 1, NULL, 0, NULL) == -1) {
             printError();
         }
     }
     
     if (mask & static_cast<int8_t>(PollerEvent::POLLER_OUT) ) {
-        EV_SET(&event, fd, EVFILT_WRITE, EV_ADD, 0, 0, udata);
+        EV_SET(&event, fd, EVFILT_WRITE, EV_ADD | EV_CLEAR, 0, 0, udata);
         if (kevent(kqfd_, &event, 1, NULL, 0, NULL) == -1) {
             printError();
         }
@@ -79,7 +79,7 @@ void Kqueue::modFd(int fd, int mask, void *udata)
     struct kevent event;
     
     if (mask & static_cast<int8_t>(PollerEvent::POLLER_IN)) {
-        EV_SET(&event, fd, EVFILT_READ, EV_ADD, 0, 0, udata);
+        EV_SET(&event, fd, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, udata);
     }
     else {
         EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, udata);
@@ -90,7 +90,7 @@ void Kqueue::modFd(int fd, int mask, void *udata)
     }
     
     if (mask & static_cast<int8_t>(PollerEvent::POLLER_OUT)) {
-        EV_SET(&event, fd, EVFILT_WRITE, EV_ADD, 0, 0, udata);
+        EV_SET(&event, fd, EVFILT_WRITE, EV_ADD | EV_CLEAR, 0, 0, udata);
       
     }
     else {
@@ -106,22 +106,22 @@ void Kqueue::poll()
 {
     int n = 0;
     struct timespec spec = DateTime::msToTimespec(timeout);
-    if ( (n = kevent(kqfd_, NULL, 0, &*events.begin(), events.size(), &spec)) == -1) {
+    if ( (n = kevent(kqfd_, NULL, 0, &*events_.begin(), events_.size(), &spec)) == -1) {
         printError();
     }
 
     for (size_t index = 0; index < n; ++index) {
-        if (events[index].filter == EVFILT_READ) {
+        if (events_[index].filter == EVFILT_READ) {
             
         }
         
-        if (events[index].filter == EVFILT_WRITE) {
+        if (events_[index].filter == EVFILT_WRITE) {
             
         }
     }
     
-    if (n == events.size()) {
-        events.resize(MAX_EVENTS * 2);
+    if (n == events_.size()) {
+        events_.resize(MAX_EVENTS * 2);
     }
 }
 

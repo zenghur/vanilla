@@ -30,7 +30,7 @@ public:
 private:
     static const int timeout = 10; // milliseconds
     static const int MAX_EVENTS = 30;
-    std::vector<struct kevent> events;
+    std::vector<struct kevent> events_;
     int kqfd_;
 };
 

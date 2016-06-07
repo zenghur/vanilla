@@ -35,7 +35,10 @@ public:
     
     int getSocketFd();
     
-    void setNonBlock();
+    static void makeNonBlock(int fd);
+    void setNonBlockStatus(bool flag);
+    bool getNonBlockStatus();
+    
 public:
     static TcpSocket* createListener(std::string ip, uint16_t port);
     static TcpSocket* createConnector(std::string ip, uint16_t port);
