@@ -67,9 +67,7 @@ bool TcpSocket::getNonBlockStatus()
 
 void TcpSocket::makeNonBlock(int fd)
 {
-    if (fd < 0) {
-        return;
-    }
+    assert(fd >= 0);
     
     int flags = fcntl(fd, F_GETFL, 0);
     if (flags < 0) {
@@ -90,6 +88,8 @@ std::shared_ptr<TcpSocket> TcpSocket::createListener(std::string ip, uint16_t po
     }
     
     SocketOption::setReuseAddr(fd);
+    TcpSocket::makeNonBlock(fd);
+    
     
     struct sockaddr_in addr;
     socklen_t sockLen;
@@ -116,7 +116,10 @@ std::shared_ptr<TcpSocket> TcpSocket::createListener(std::string ip, uint16_t po
         printError();
     }
     
-    return std::shared_ptr<TcpSocket>(new TcpSocket(fd));
+    std::shared_ptr<TcpSocket> socket(new TcpSocket(fd));
+    socket->setNonBlockStatus(true);
+    
+    return std::move(socket);
 }
 
 std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint16_t port)

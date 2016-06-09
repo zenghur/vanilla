@@ -37,19 +37,33 @@ void TcpListener::listen(std::string ip, uint16_t port)
 void TcpListener::canRead()
 {
     do {
-        struct sockaddr_in addr;
-        socklen_t len;
-        int fd = ::accept(socket_->getSocketFd(), (struct sockaddr *)(&addr), &len);
-        if (fd < 0) {
+    
+        struct sockaddr_in clientAddr;
+        socklen_t len = sizeof(socklen_t);
+        
+        // non-blocking accept;
+        int clientFd = ::accept(socket_->getSocketFd(), reinterpret_cast<struct sockaddr *>(&clientAddr), &len);
+        
+        if (clientFd < 0) {
+            ;
+            
             if (errno == EAGAIN || errno == EWOULDBLOCK)
+                std::cout << "haha" << std::endl;
                 break;
+            
+            if (errno == EINTR) {
+                continue;
+            }
         }
         
-        int port = be16toh(addr.sin_port);
-        string ip(inet_ntoa(addr.sin_addr));
+        static int connections = 0;
+        int port = be16toh(clientAddr.sin_port);
+        string ip(inet_ntoa(clientAddr.sin_addr));
         
     
-        std::cout << "connection socket: " <<  fd << " ip: " << ip  << " port: " << port << std::endl;
+        std::cout << "connection socket: " <<  clientFd << " ip: " << ip  << " port: " << port << std::endl;
+        std::cout << "当前连接数: " << ++connections << std::endl;
+        
     } while (true);
     
 }

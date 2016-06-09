@@ -10,11 +10,13 @@
 #include "Error.h"
 #include "DateTime.h"
 #include "IOEvent.h"
+#include <iostream>
 
 #include <unistd.h>
 #include <time.h>
 
 using namespace vanilla;
+using namespace std;
 
 #ifdef __APPLE__
 
@@ -121,10 +123,6 @@ void Kqueue::poll()
         if (events_[index].filter == EVFILT_WRITE) {
             
         }
-    }
-    
-    if (n == events_.size()) {
-        events_.resize(MAX_EVENTS * 2);
     }
 }
 

@@ -28,7 +28,7 @@ public:
     virtual void modFd(int fd, vanilla::PollerEvent mask, void *udata);
     virtual void poll();
 private:
-    static const int timeout = 10 * 10000; // milliseconds
+    static const int timeout = 10; // milliseconds
     static const int MAX_EVENTS = 30;
     std::vector<struct kevent> events_;
     int kqfd_;
