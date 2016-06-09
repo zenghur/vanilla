@@ -45,10 +45,8 @@ void TcpListener::canRead()
         int clientFd = ::accept(socket_->getSocketFd(), reinterpret_cast<struct sockaddr *>(&clientAddr), &len);
         
         if (clientFd < 0) {
-            ;
             
             if (errno == EAGAIN || errno == EWOULDBLOCK)
-                std::cout << "haha" << std::endl;
                 break;
             
             if (errno == EINTR) {

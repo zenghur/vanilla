@@ -17,11 +17,12 @@ int
 main(void)
 {
     TcpListener listener;
-    listener.listen("127.0.0.1", 15000);
+    listener.listen("192.168.31.246", 15000);
     std::unique_ptr<Poller> poller = Poller::createPoller();
     poller->addFd(listener.getListenerFd(), PollerEvent::POLLER_IN, &listener);
     while (true) {
         poller->poll();
+        usleep(50000);
     }
     return 0;
 }
