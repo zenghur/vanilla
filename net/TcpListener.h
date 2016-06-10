@@ -15,17 +15,22 @@
 
 #include <string>
 
-namespace vanilla {
 
+
+namespace vanilla {
+    
+class Poller;
+    
 class TcpListener : public IOEvent {
 public:
-    TcpListener();
+    explicit TcpListener(Poller *poller = nullptr);
     int getListenerFd();
     void listen(std::string ip, uint16_t port);
 public:
     virtual void canRead();
     virtual void canWrite();
 private:
+    Poller *poller_;
     std::shared_ptr<TcpSocket> socket_;
 };
     

@@ -11,14 +11,19 @@
 
 #include "IOEvent.h"
 #include "TcpSocket.h"
+#include "Poller.h"
 
 namespace vanilla {
     
 class TcpConnection : public IOEvent {
 public:
+    explicit TcpConnection(Poller *poller);
     virtual void canRead();
     virtual void canWrite();
+    void createConnection(int fd);
+    int getConnectionFd();
 private:
+    Poller *poller_;
     std::shared_ptr<TcpSocket> socket_;
 };
     

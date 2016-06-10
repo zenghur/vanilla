@@ -21,9 +21,9 @@ public:
 public:
     virtual void poll() = 0;
     virtual void init() = 0;
-    virtual void addFd(int fd, vanilla::PollerEvent mask, void *udata) = 0;
-    virtual void deleteFd(int fd, vanilla::PollerEvent mask) = 0;
-    virtual void modFd(int fd, vanilla::PollerEvent mask, void *udata) = 0;
+    virtual void addFd(int fd, int8_t mask, void *udata) = 0;
+    virtual void deleteFd(int fd, int8_t mask) = 0;
+    virtual void modFd(int fd, int8_t mask, void *udata) = 0;
     virtual ~Poller() {};
 };
     
