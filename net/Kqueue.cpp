@@ -121,8 +121,7 @@ void Kqueue::poll()
             continue;
         }
         
-        if ((events_[index].flags == EV_ERROR) || (events_[index].flags == EV_EOF)) {
-            fprintf(stderr, "EV_ERROR: %s\n", strerror(events_[index].data));
+        if ((events_[index].flags & EV_ERROR) || (events_[index].flags & EV_EOF)) {
             ::close(events_[index].ident);
             continue;
         }

@@ -25,13 +25,13 @@ int TcpConnection::getConnectionFd()
     return socket_->getSocketFd();
 }
 
-void TcpConnection::createConnection(int fd)
+void TcpConnection::init(int fd)
 {
     assert(poller_);
     
     socket_  = std::make_shared<TcpSocket>(fd);
     TcpSocket::makeNonBlock(fd);
-    poller_->addFd(fd, static_cast<int8_t>(PollerEvent::POLLER_IN) | static_cast<int8_t>(PollerEvent::POLLER_OUT), this);
+    poller_->addFd(fd, static_cast<int8_t>(PollerEvent::POLLER_IN), this);
     
 }
 

@@ -20,7 +20,7 @@ public:
     explicit TcpConnection(Poller *poller);
     virtual void canRead();
     virtual void canWrite();
-    void createConnection(int fd);
+    void init(int fd);
     int getConnectionFd();
 private:
     Poller *poller_;

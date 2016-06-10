@@ -60,8 +60,8 @@ void TcpListener::canRead()
             }
         }
         
-        TcpConnection connection(poller_);
-        connection.createConnection(clientFd);
+        TcpConnection *connection = new TcpConnection(poller_);
+        connection->init(clientFd);
         
         static int connections = 0;
         int port = be16toh(clientAddr.sin_port);
