@@ -1,6 +1,7 @@
 // @author: zenghongru@gmail.com
 
 #include "Thread.h"
+#include "DateTime.h"
 
 using namespace vanilla;
 
@@ -14,6 +15,12 @@ Thread::Thread(): joinable_(true),
 void Thread::start(ThreadStartFun fun, void *para)
 {
     pthread_create(&handle_, NULL, fun, para);
+}
+
+void Thread::sleep(int ms)
+{
+    struct timeval val = DateTime::msToTimeval(ms);
+    select(0, NULL, NULL, NULL, &val);
 }
 
 void Thread::join()

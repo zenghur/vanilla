@@ -18,6 +18,7 @@ class Thread : private vanilla::Noncopyable {
 public:
     typedef void *(*ThreadStartFun)(void *);
     Thread();
+    void sleep(int ms);
     void start(ThreadStartFun fun, void *para);
     void join();
     void detach();

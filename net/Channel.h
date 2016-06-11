@@ -12,6 +12,7 @@
 #include "Poller.h"
 
 #include "Noncopyable.h"
+#include "Thread.h"
 
 
 #include <vector>
@@ -26,15 +27,23 @@ public:
     explicit Channel(TcpListener *listener = nullptr);
     void init();
     int getListenerFd();
+    void start();
+    static void *loop(void *para);
     TcpConnection *getConnection(int sessionID);
+    
+    void sleep(int ms);
+    bool isProcessing();
+    
 private:
+    bool processing_;
     std::unique_ptr<Poller> poller_;
-    std::shared_ptr<TcpListener> listener_;
+    TcpListener *listener_;
     std::vector<std::shared_ptr<TcpConnection> > connections;
 private:
     int currentConnectionIdx;
     int currentConnectionsCount;
     const static int MAX_CONNECTIONS = 10000;
+    Thread thread_;
 };
     
     
