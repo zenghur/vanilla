@@ -143,43 +143,52 @@ int TcpSocket::nonBlockSend(char *data, size_t len)
 {
     assert(isNonBlocking_);
     
-    ssize_t nBytes = ::send(sockfd_, data, len, 0);
-    
-    // 3种情况
-    if (nBytes == -1 && (errno == EWOULDBLOCK || errno == EAGAIN || errno == EINTR)) {
-        return 0;
+    ssize_t totalLen = len;
+    if (len > 0) {
+        ssize_t ret;
+        
+        while ((ret = ::send(sockfd_, data, len, 0)) != 0 && (len != 0)) {
+            
+            if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN) ) {
+                break;
+            }
+            
+            if (ret == -1 && errno == EINTR) {
+                continue;
+            }
+            
+            if (ret == -1) {
+                return -1;
+            }
+            
+            data += ret;
+            len -= ret;
+        }
     }
-    
-    if (nBytes == -1) {
-        return -1;
-    }
-    
-    if (nBytes == 0) {
-        return 0;
-    }
-    
-    return static_cast<int>(nBytes);
+    return totalLen - len;
 }
 
 int TcpSocket::nonBlockRecv(char *data, size_t len)
 {
     assert(isNonBlocking_);
-
-    ssize_t nBytes = ::recv(sockfd_, data, len, 0);
-    
-    if ((nBytes == -1) && (errno == EWOULDBLOCK || errno == EAGAIN || errno == EINTR)) {
-        return 0;
+    ssize_t totalLen = len;
+    if (len > 0) {
+        ssize_t ret;
+        while ((ret == ::recv(sockfd_, data, len, 0)) != 0 && (len != 0)) {
+            if (errno == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
+                break;
+            }
+            if (errno == -1 && errno == EINTR) {
+                continue;
+            }
+            if (errno == -1) {
+                return -1;
+            }
+            len -= ret;
+            data += ret;
+        }
     }
-    
-    if (nBytes == -1) {
-        return -1;
-    }
-    
-    if (nBytes == 0) {
-        return 0;
-    }
-    
-    return static_cast<int>(nBytes);
+    return totalLen - len;
 }
 
 int TcpSocket::blockSend(char *data, size_t len)

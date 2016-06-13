@@ -9,8 +9,8 @@
 // Double-checked locking pattern(DCLP)的做法有问题，stackoverflow有讨论。
 // Scott Meyers and Andrei Alexandrescu对此有话要说！文章名叫C++ and the Perils of Double-Checked Locking。
 
-#ifndef GenericSingleton_hpp
-#define GenericSingleton_hpp
+#ifndef GenericSingleton_h
+#define GenericSingleton_h
 
 #include "Noncopyable.h"
 
@@ -80,4 +80,4 @@ void GenericSingleton<T>::destroy()
 
 
 
-#endif /* GenericSingleton_hpp */
+#endif /* GenericSingleton_h */
