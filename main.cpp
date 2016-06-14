@@ -6,6 +6,7 @@
 #include <vector>
 #include "Poller.h"
 #include "TcpListener.h"
+#include "SocketOption.h"
 #include "SessionIDDispatcher.h"
 
 
@@ -17,6 +18,5 @@ using namespace vanilla;
 int
 main(void)
 {
-    return 0;
 }
 

@@ -153,11 +153,11 @@ int TcpSocket::nonBlockSend(char *data, size_t len)
                 break;
             }
             
-            if (ret == -1 && errno == EINTR) {
+            else if (ret == -1 && errno == EINTR) {
                 continue;
             }
             
-            if (ret == -1) {
+            else if (ret == -1) {
                 return -1;
             }
             
@@ -178,10 +178,10 @@ int TcpSocket::nonBlockRecv(char *data, size_t len)
             if (errno == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
                 break;
             }
-            if (errno == -1 && errno == EINTR) {
+            else if (errno == -1 && errno == EINTR) {
                 continue;
             }
-            if (errno == -1) {
+            else if (errno == -1) {
                 return -1;
             }
             len -= ret;
@@ -196,18 +196,26 @@ int TcpSocket::blockSend(char *data, size_t len)
     assert(!isNonBlocking_);
     
     ssize_t ret;
+    ssize_t totalLen = len;
     
     while (len != 0 && (ret = ::send(sockfd_, data, len, 0)) != 0) {
         if (ret == -1 && errno == EINTR) {
             continue;
         }
-        else {
+        
+        // 设置SO_RCVTIMEO 和 SO_SNDTIMEO 在阻塞模式下也可能发送eagain
+        else if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
             break;
         }
+        
+        else if (ret == -1) {
+            return -1;
+        }
+        
         data += ret;
         len -= ret;
     }
-    return static_cast<int>(len);
+    return totalLen - len;
 }
 
 int TcpSocket::blockRecv(char *data, size_t len)
@@ -215,17 +223,22 @@ int TcpSocket::blockRecv(char *data, size_t len)
     assert(!isNonBlocking_);
     
     ssize_t ret;
+    ssize_t totalLen = len;
 
     while (len != 0 && (ret == ::recv(sockfd_, data, len, 0)) != 0) {
         if (ret == -1 && errno == EINTR) {
             continue;
         }
-        else {
+        else if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
             break;
+        }
+        
+        else if (ret == -1) {
+            return -1;
         }
         data += ret;
         len -= ret;
     }
-    return static_cast<int>(len);
+    return totalLen - len;
 }
 
