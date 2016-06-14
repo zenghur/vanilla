@@ -18,10 +18,12 @@ namespace vanilla {
 class TcpConnection : public IOEvent {
 public:
     explicit TcpConnection(Poller *poller);
-    virtual void canRead();
-    virtual void canWrite();
     void init(int fd);
     int getConnectionFd();
+public:
+    virtual void canRead();
+    virtual void canWrite();
+    int send(char *data, int len);
 private:
     Poller *poller_;
     std::shared_ptr<TcpSocket> socket_;

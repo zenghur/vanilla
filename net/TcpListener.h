@@ -28,7 +28,6 @@ public:
     void listen(std::string ip, uint16_t port);
 public:
     virtual void canRead();
-    virtual void canWrite();
 private:
     Poller *poller_;
     std::shared_ptr<TcpSocket> socket_;

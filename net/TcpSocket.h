@@ -38,7 +38,11 @@ public:
     static void makeNonBlock(int fd);
     void setNonBlockStatus(bool flag);
     bool getNonBlockStatus();
-    
+public:
+    int send(char *data, int len);
+    int sendBuf();
+    int putResponseDataInBuf(char *data, int len);
+
 public:
     static std::shared_ptr<TcpSocket> createListener(std::string ip, uint16_t port);
     static std::shared_ptr<TcpSocket> createConnector(std::string peerName, uint16_t port);

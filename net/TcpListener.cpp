@@ -74,7 +74,3 @@ void TcpListener::canRead()
     
 }
 
-void TcpListener::canWrite()
-{
-    
-}

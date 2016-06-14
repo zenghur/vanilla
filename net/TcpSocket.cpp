@@ -242,3 +242,29 @@ int TcpSocket::blockRecv(char *data, size_t len)
     return totalLen - len;
 }
 
+int TcpSocket::send(char *data, int len)
+{
+    if (sendBuf() == -1) {
+        // 关闭
+    }
+    
+    // 如果剩余，说明需要缓存；否则，直接发送
+    if (sendLen_ > 0) {
+        putResponseDataInBuf(data, len);
+    }
+    else {
+        
+    }
+}
+
+int TcpSocket::sendBuf()
+{
+    
+}
+
+int TcpSocket::putResponseDataInBuf(char *data, int len)
+{
+    
+}
+
+

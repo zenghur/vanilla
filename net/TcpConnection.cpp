@@ -45,3 +45,8 @@ void TcpConnection::canWrite()
 {
     
 }
+
+int TcpConnection::send(char *data, int len)
+{
+    
+}
