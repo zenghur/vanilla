@@ -10,6 +10,7 @@
 #define Channel_h
 
 #include "Poller.h"
+#include "MessageReactor.h"
 
 #include "Noncopyable.h"
 #include "Thread.h"
@@ -37,6 +38,7 @@ public:
 private:
     bool processing_;
     std::unique_ptr<Poller> poller_;
+    std::unique_ptr<MessageReactor> reactor_;
     TcpListener *listener_;
     std::vector<std::shared_ptr<TcpConnection> > connections;
 private:

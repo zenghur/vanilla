@@ -8,6 +8,7 @@
 #include "TcpListener.h"
 #include "SocketOption.h"
 #include "SessionIDDispatcher.h"
+#include "PassiveMessageReactor.h"
 
 
 #include <iostream>
@@ -18,5 +19,7 @@ using namespace vanilla;
 int
 main(void)
 {
+    PassiveMessageReactor reactor1;
+    
 }
 
