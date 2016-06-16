@@ -25,28 +25,42 @@ int TcpConnection::getConnectionFd()
     return socket_->getSocketFd();
 }
 
+void TcpConnection::closeConnection()
+{
+    socket_->close();
+}
+
 void TcpConnection::init(int fd)
 {
     assert(poller_);
     
     socket_  = std::make_shared<TcpSocket>(fd);
     TcpSocket::makeNonBlock(fd);
-    poller_->addFd(fd, static_cast<int8_t>(PollerEvent::POLLER_IN), this);
+    poller_->addFd(fd, static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN) | static_cast<Poller::PollerEventType>(PollerEvent::POLLER_OUT), this);
     
 }
 
 
 void TcpConnection::canRead()
 {
-    
+    int ret = socket_->recv();
+    if (ret == -1) {
+        closeConnection();
+    }
 }
 
 void TcpConnection::canWrite()
 {
-    
+    int ret = socket_->sendBuf();
+    if (ret == -1) {
+        closeConnection();
+    }
 }
 
-int TcpConnection::send(char *data, int len)
+void TcpConnection::send(char *data, int len)
 {
-    
+    int ret = socket_->send(data, len);
+    if (ret == -1) {
+        closeConnection();
+    }
 }

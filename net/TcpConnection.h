@@ -20,15 +20,15 @@ public:
     explicit TcpConnection(Poller *poller);
     void init(int fd);
     int getConnectionFd();
+    void closeConnection();
 public:
     virtual void canRead();
     virtual void canWrite();
-    int send(char *data, int len);
+    void send(char *data, int len);
 private:
     Poller *poller_;
     std::shared_ptr<TcpSocket> socket_;
 };
-    
     
 }
 

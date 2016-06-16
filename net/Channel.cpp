@@ -67,7 +67,7 @@ TcpConnection *getConnection(int sessionID)
 void Channel::init()
 {
     poller_  = Poller::createPoller();
-    poller_->addFd(listener_->getListenerFd(), static_cast<int8_t>(PollerEvent::POLLER_IN), listener_);
+    poller_->addFd(listener_->getListenerFd(), static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN), listener_);
     processing_ = true;
     
     for (auto i = 0; i < MAX_CONNECTIONS; ++i) {

@@ -17,7 +17,6 @@ class SessionIDDispatcher {
 public:
     typedef uint64_t SessionType;
     typedef uint32_t ID;
-    static int getChannelID();
     static SessionType getSessionId(int serverID, int channelID, int autoIncrementIndex);
     static ID getServerID(SessionType num);
     static ID getChannelID(SessionType num);

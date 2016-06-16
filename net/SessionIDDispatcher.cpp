@@ -14,13 +14,6 @@
 
 using namespace vanilla;
 
-int SessionIDDispatcher::getChannelID()
-{
-    static int num = 1;
-    return num++;
-}
-
-
 // 24 + 8 + 32
 SessionIDDispatcher::SessionType SessionIDDispatcher::getSessionId(int serverID, int channelID, int autoIncrementIndex)
 {

@@ -23,9 +23,9 @@ public:
     virtual ~Kqueue();
 public:
     virtual void init();
-    virtual void addFd(int fd, int8_t mask, void *udata);
-    virtual void deleteFd(int fd, int8_t mask);
-    virtual void modFd(int fd, int8_t mask, void *udata);
+    virtual void addFd(int fd, PollerEventType mask, void *udata);
+    virtual void deleteFd(int fd, PollerEventType mask);
+    virtual void modFd(int fd, PollerEventType mask, void *udata);
     virtual void poll();
 private:
     static const int timeout = 10; // milliseconds

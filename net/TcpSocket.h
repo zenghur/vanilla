@@ -20,8 +20,9 @@ namespace vanilla {
 
 class TcpSocket : private vanilla::Noncopyable {
 public:
-    static const int SND_BUF = 64 * 1024;
-    static const int RCV_BUF = 64 * 1024;
+    static const int SND_BUF_SIZE = 64 * 1024;
+    static const int RCV_BUF_SIZE = 64 * 1024;
+    static const int RCV_HEADER_SIZE = 4;
 public:
     explicit TcpSocket(int fd = -1);
     ~TcpSocket();
@@ -39,10 +40,14 @@ public:
     void setNonBlockStatus(bool flag);
     bool getNonBlockStatus();
 public:
+    // 发送相关
     int send(char *data, int len);
+    int getSendLen();
     int sendBuf();
     int putResponseDataInBuf(char *data, int len);
-
+public:
+    // 接收相关
+    int recv();
 public:
     static std::shared_ptr<TcpSocket> createListener(std::string ip, uint16_t port);
     static std::shared_ptr<TcpSocket> createConnector(std::string peerName, uint16_t port);
@@ -55,9 +60,10 @@ private:
     int sendBufStartIndex_;
     int sendLen_;
     
+    // message buffer
     std::vector<char> recvBuf_;
-    int recvBufStartIndex_;
     int recvLen_;
+    int payLoadSize_;
 };
     
 }

@@ -29,12 +29,12 @@ using namespace vanilla;
 
 TcpSocket::TcpSocket(int fd): sockfd_(fd),
                               isNonBlocking_(false),
-                              sendBuf_(SND_BUF),
+                              sendBuf_(SND_BUF_SIZE),
                               sendBufStartIndex_(0),
                               sendLen_(0),
-                              recvBuf_(RCV_BUF),
-                              recvBufStartIndex_(0),
-                              recvLen_(0)
+                              recvBuf_(RCV_BUF_SIZE),
+                              recvLen_(0),
+                              payLoadSize_(0)
 {
    
 }
@@ -48,6 +48,12 @@ TcpSocket::~TcpSocket()
 void TcpSocket::close()
 {
     ::close(sockfd_);
+    sockfd_ = -1;
+    isNonBlocking_ = false;
+    sendBufStartIndex_ = 0;
+    sendLen_ = 0;
+    recvLen_ = 0;
+    payLoadSize_ = 0;
 }
 
 int TcpSocket::getSocketFd()
@@ -131,7 +137,6 @@ std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint
     
     makeNonBlock(fd);
     
-        
     
     std::shared_ptr<TcpSocket> socket = std::make_shared<TcpSocket>(fd);
     socket->setNonBlockStatus(true);
@@ -242,29 +247,127 @@ int TcpSocket::blockRecv(char *data, size_t len)
     return totalLen - len;
 }
 
+int TcpSocket::getSendLen()
+{
+    return sendLen_;
+}
+
 int TcpSocket::send(char *data, int len)
 {
-    if (sendBuf() == -1) {
-        // 关闭
-    }
-    
-    // 如果剩余，说明需要缓存；否则，直接发送
-    if (sendLen_ > 0) {
-        putResponseDataInBuf(data, len);
-    }
-    else {
+    int ret = 0;
+    do {
+        ret = sendBuf();
         
-    }
+        if (ret == -1) {
+            break;
+        }
+        
+        if (sendLen_ > 0) {
+            ret = putResponseDataInBuf(data, len);
+            if (ret == -1) {
+                break;
+            }
+        }
+        else {
+            ret = nonBlockSend(data, len);
+            if (ret == -1) {
+                break;
+            }
+            
+            if (ret < len) {
+                ret = putResponseDataInBuf(data + ret, len - ret);
+                if (ret == -1) {
+                    break;
+                }
+            }
+        }
+        
+    } while(false);
+    return ret;
 }
 
 int TcpSocket::sendBuf()
 {
+    while (sendLen_ > 0) {
+        int bytesTobeSent = 0;
+        if (sendBufStartIndex_ + sendLen_ > SND_BUF_SIZE) {
+            bytesTobeSent = SND_BUF_SIZE - sendBufStartIndex_;
+        }
+        else {
+            bytesTobeSent = sendLen_;
+        }
+        
+        int actualBytesSent = nonBlockSend(&sendBuf_[sendBufStartIndex_], bytesTobeSent);
+        if (actualBytesSent == -1) {
+            return -1;
+        }
+        
+        sendLen_ -= actualBytesSent;
+        sendBufStartIndex_ = (sendBufStartIndex_ + actualBytesSent) % SND_BUF_SIZE;
+        
+        if (actualBytesSent < bytesTobeSent) {
+            break;
+        }
+    }
     
+    return 0;
 }
 
 int TcpSocket::putResponseDataInBuf(char *data, int len)
 {
+    if (sendLen_ + len > SND_BUF_SIZE) {
+        return -1;
+    }
     
+    int tailIndex = (sendBufStartIndex_ + sendLen_) % SND_BUF_SIZE;
+    
+    if (sendBufStartIndex_ < tailIndex) {
+        std::copy(data, data + len, &sendBuf_[sendBufStartIndex_ + sendLen_]);
+    }
+    else {
+        std::copy(data, data + len, &sendBuf_[tailIndex + 1]);
+    }
+    
+    sendLen_ += len;
+    
+    return 0;
+}
+
+int TcpSocket::recv()
+{
+    while (true) {
+        int expectantBytes;
+        if (payLoadSize_ == 0) {
+            expectantBytes = RCV_HEADER_SIZE - recvLen_;
+        }
+        else {
+            expectantBytes = RCV_HEADER_SIZE + payLoadSize_ - recvLen_;
+        }
+        
+        int ret = nonBlockRecv(&recvBuf_[recvLen_], expectantBytes);
+        if (ret == -1) {
+            return -1;
+        }
+        
+        recvLen_ += ret;
+        
+        if (ret < expectantBytes) {
+            break;
+        }
+        
+        if (payLoadSize_ == 0) {
+            std::copy(&recvBuf_[0], &recvBuf_[RCV_HEADER_SIZE], &payLoadSize_);
+            if (payLoadSize_ > RCV_BUF_SIZE) {
+                return -1;
+            }
+        }
+        else {
+            // 读完了
+            recvLen_ = 0;
+            payLoadSize_ = 0;
+        }
+    }
+    return 0;
 }
 
 

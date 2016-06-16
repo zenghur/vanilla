@@ -37,7 +37,7 @@ void TcpListener::listen(std::string ip, uint16_t port)
 {
     assert(poller_);
     socket_ = TcpSocket::createListener(ip, port);
-    poller_->addFd(getListenerFd(), static_cast<int8_t>(PollerEvent::POLLER_IN), this);
+    poller_->addFd(getListenerFd(), static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN), this);
 }
 
 void TcpListener::canRead()
