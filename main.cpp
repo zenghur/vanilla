@@ -9,6 +9,7 @@
 #include "SocketOption.h"
 #include "SessionIDDispatcher.h"
 #include "PassiveMessageReactor.h"
+#include "Message.h"
 
 
 #include <iostream>
@@ -19,7 +20,10 @@ using namespace vanilla;
 int
 main(void)
 {
-    PassiveMessageReactor reactor1;
     
+    std::unique_ptr<char[]> data(new char[10]);
+    std::unique_ptr<char[]> datum;
+    datum = std::move(data);
+    return 0;
 }
 

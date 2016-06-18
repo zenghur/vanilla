@@ -36,6 +36,21 @@ void Channel::sleep(int ms)
     thread_.sleep(ms);
 }
 
+int Channel::pop(Message &item)
+{
+   return responseMessageQueue_.pop(item);
+}
+
+bool Channel::push(Message &item)
+{
+    return responseMessageQueue_.push(item);
+}
+
+void Channel::onMessage(Message &message)
+{
+    reactor_->onMessage(message);
+}
+
 void Channel::start()
 {
     thread_.start(loop, this);
@@ -50,7 +65,12 @@ void *Channel::loop(void *para)
     }
     
     while (channel->isProcessing()) {
-        
+        Message item;
+        if (channel->pop(item) == -1) {
+            channel->sleep(20);
+            continue;
+        }
+        channel->onMessage(item);
     }
     
     return channel;

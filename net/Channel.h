@@ -14,6 +14,9 @@
 
 #include "Noncopyable.h"
 #include "Thread.h"
+#include "ConcurrentQueue.h"
+#include "Message.h"
+#include "PassiveMessageReactor.h"
 
 
 #include <vector>
@@ -34,6 +37,11 @@ public:
     
     void sleep(int ms);
     bool isProcessing();
+public:
+    int pop(Message &item);
+    bool push(Message &item);
+public:
+    void onMessage(Message &message);
     
 private:
     bool processing_;
@@ -41,6 +49,8 @@ private:
     std::unique_ptr<MessageReactor> reactor_;
     TcpListener *listener_;
     std::vector<std::shared_ptr<TcpConnection> > connections;
+private:
+    ConcurrentQueue<Message> responseMessageQueue_;
 private:
     int currentConnectionIdx;
     int currentConnectionsCount;

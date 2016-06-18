@@ -21,19 +21,10 @@ PassiveMessageReactor::~PassiveMessageReactor()
     
 }
 
-void PassiveMessageReactor::onMessage(int sessionID, MessageReactorType type, char *data, int len)
+void PassiveMessageReactor::onMessage(Message &message)
 {
-    switch (type) {
-        case MessageReactorType::ACCEPT: {
-            break;
-        }
-        case MessageReactorType::READ: {
-            break;
-        }
-        case MessageReactorType::DISCONNECT: {
-            break;
-        }
-        default: {
+    switch (message.type_) {
+           default: {
             break;
         }
     }

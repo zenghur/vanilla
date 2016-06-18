@@ -17,7 +17,7 @@ namespace vanilla {
 class PassiveMessageReactor : public MessageReactor {
 public:
     PassiveMessageReactor();
-    virtual void onMessage(int sessionID, MessageReactorType type, char *data, int len);
+    virtual void onMessage(Message &message);
     virtual ~PassiveMessageReactor();
 private:
     PassiveMessageReactor(const PassiveMessageReactor &) = delete;

@@ -10,19 +10,14 @@
 #define MessageReactor_h
 
 #include <memory>
+#include "SessionIDDispatcher.h"
+#include "Message.h"
 
 namespace vanilla {
-
-enum class MessageReactorType : int {
-    ACCEPT = 0,
-    READ = 1,
-    DISCONNECT = 2,
-    CONNECT = 3
-};
     
 class MessageReactor {
 public:
-    virtual void onMessage(int sessionID, MessageReactorType type, char *data, int len) = 0;
+    virtual void onMessage(Message &message) = 0;
     virtual ~MessageReactor() {}
 };
     
