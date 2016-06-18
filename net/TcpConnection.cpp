@@ -22,7 +22,12 @@ TcpConnection::TcpConnection(Poller *poller): socket_(nullptr),
 
 int TcpConnection::getConnectionFd()
 {
-    return socket_->getSocketFd();
+    if (socket_) {
+        return socket_->getSocketFd();
+    }
+    else {
+        return -1;
+    }
 }
 
 void TcpConnection::closeConnection()
@@ -36,6 +41,8 @@ void TcpConnection::init(int fd)
     
     socket_  = std::make_shared<TcpSocket>(fd);
     TcpSocket::makeNonBlock(fd);
+    socket_->setNonBlockStatus(true);
+    
     poller_->addFd(fd, static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN) | static_cast<Poller::PollerEventType>(PollerEvent::POLLER_OUT), this);
     
 }

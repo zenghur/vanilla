@@ -7,6 +7,7 @@
 //
 
 #include "PassiveMessageReactor.h"
+#include "MessageType.h"
 
 
 using namespace vanilla;
@@ -21,10 +22,23 @@ PassiveMessageReactor::~PassiveMessageReactor()
     
 }
 
+void PassiveMessageReactor::setPoller(Poller *poller)
+{
+    poller_ = poller;
+}
+
 void PassiveMessageReactor::onMessage(Message &message)
 {
     switch (message.type_) {
-           default: {
+        case Vanilla::MessageType::NET_MSG: {
+            
+            break;
+        }
+        case Vanilla::MessageType::TIMER_MSG: {
+            poller_->poll();
+            break;
+        }
+        default: {
             break;
         }
     }

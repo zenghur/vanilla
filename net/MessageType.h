@@ -13,7 +13,7 @@ namespace Vanilla {
 enum MessageType : int {
     NET_MSG = 0,
     TIMER_MSG = 1,
-}
+};
 
     
 };

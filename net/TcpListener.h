@@ -21,15 +21,12 @@ namespace vanilla {
     
 class Poller;
     
-class TcpListener : public IOEvent {
+class TcpListener {
 public:
     explicit TcpListener(Poller *poller = nullptr);
     int getListenerFd();
     void listen(std::string ip, uint16_t port);
-public:
-    virtual void canRead();
 private:
-    Poller *poller_;
     std::shared_ptr<TcpSocket> socket_;
 };
     

@@ -11,17 +11,21 @@
 
 #include "Noncopyable.h"
 #include "MessageReactor.h"
+#include "Poller.h"
 
 namespace vanilla {
     
 class PassiveMessageReactor : public MessageReactor {
 public:
     PassiveMessageReactor();
+    void setPoller(Poller *poller);
     virtual void onMessage(Message &message);
     virtual ~PassiveMessageReactor();
 private:
     PassiveMessageReactor(const PassiveMessageReactor &) = delete;
     PassiveMessageReactor &operator = (const PassiveMessageReactor &) = delete;
+private:
+    Poller *poller_;
 };
     
 }

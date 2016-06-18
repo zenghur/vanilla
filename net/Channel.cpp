@@ -9,14 +9,25 @@
 #include "Channel.h"
 #include "TcpListener.h"
 #include "TcpConnection.h"
+#include "Endian.h"
+#include "SessionIDDispatcher.h"
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <errno.h>
+#include <arpa/inet.h>
+
+#include <string>
+#include <iostream>
 
 using namespace vanilla;
 
 Channel::Channel(TcpListener *listener): poller_(nullptr),
                                          listener_(listener),
                                          processing_(false),
-                                         currentConnectionIdx(0),
-                                         currentConnectionsCount(0)
+                                         currentConnectionIdx_(0),
+                                         currentConnectionsCount_(0)
 {
     
 }
@@ -24,6 +35,36 @@ Channel::Channel(TcpListener *listener): poller_(nullptr),
 int Channel::getListenerFd()
 {
     return listener_->getListenerFd();
+}
+
+int Channel::getChannelID()
+{
+    return channelID_;
+}
+
+void Channel::setChannelID(int channelID)
+{
+    channelID_ = channelID;
+}
+
+vanilla::Channel::SessionType Channel::generateSessionID()
+{
+    if (currentConnectionsCount_ >= MAX_CONNECTIONS) {
+        return 0;
+    }
+    
+    int hole = 0;
+    for (int i = 0; i < MAX_CONNECTIONS; ++i) {
+        hole = (currentConnectionIdx_ + i) % MAX_CONNECTIONS;
+        if (connections[hole]->getConnectionFd() == -1) {
+            currentConnectionIdx_  =  hole;
+            ++currentConnectionsCount_;
+            SessionType sessionID = SessionIDDispatcher::getSessionId(1, getChannelID(), hole);
+            return sessionID;
+        }
+    }
+    
+    return 0;
 }
 
 bool Channel::isProcessing()
@@ -54,6 +95,45 @@ void Channel::onMessage(Message &message)
 void Channel::start()
 {
     thread_.start(loop, this);
+}
+
+void Channel::canRead()
+{
+    do {
+        
+        struct sockaddr_in clientAddr;
+        socklen_t len = sizeof(socklen_t);
+        
+        // non-blocking accept;
+        int clientFd = ::accept(listener_->getListenerFd(), reinterpret_cast<struct sockaddr *>(&clientAddr), &len);
+        
+        if (clientFd < 0) {
+            
+            if (errno == EAGAIN || errno == EWOULDBLOCK)
+                break;
+            
+            if (errno == EINTR) {
+                continue;
+            }
+        }
+        
+        SessionType sessionID = generateSessionID();
+        
+        if (sessionID == 0) {
+            ::close(clientFd);
+            continue;
+        }
+        
+        TcpConnection *connection = new TcpConnection(poller_.get());
+        connection->init(clientFd);
+        
+        static int connections = 0;
+        int port = be16toh(clientAddr.sin_port);
+        std::string ip(inet_ntoa(clientAddr.sin_addr));
+        
+        
+        
+    } while (true);
 }
 
 void *Channel::loop(void *para)
