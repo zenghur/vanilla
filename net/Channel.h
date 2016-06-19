@@ -10,11 +10,9 @@
 #define Channel_h
 
 #include "Poller.h"
-#include "MessageReactor.h"
 #include "Thread.h"
 #include "ConcurrentQueue.h"
 #include "Message.h"
-#include "PassiveMessageReactor.h"
 #include "IOEvent.h"
 
 
@@ -44,6 +42,7 @@ public:
     
     void sleep(int ms);
     bool isProcessing();
+    void setProcessing(bool flag);
 public:
     int pop_front(Message &item);
     bool push_back(Message &item);
@@ -52,7 +51,6 @@ public:
 private:
     bool processing_;
     std::unique_ptr<Poller> poller_;
-    std::unique_ptr<MessageReactor> reactor_;
     TcpListener *listener_;
     std::vector<std::shared_ptr<TcpConnection> > connections_;
 private:

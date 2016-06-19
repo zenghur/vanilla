@@ -9,7 +9,7 @@
 #ifndef MessageType_h
 #define MessageType_h
 
-namespace Vanilla {
+namespace vanilla {
 enum MessageType : int {
     NET_MSG = 0,
     TIMER_MSG = 1,

@@ -11,6 +11,7 @@
 #include "TcpConnection.h"
 #include "Endian.h"
 #include "SessionIDDispatcher.h"
+#include "MessageType.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -72,6 +73,17 @@ bool Channel::isProcessing()
     return processing_ == true;
 }
 
+void Channel::setProcessing(bool flag)
+{
+    processing_ = flag;
+    Message item;
+    item.type_ = vanilla::MessageType::TIMER_MSG;
+    item.sessionID_ = 0;
+    item.data_ = nullptr;
+    item.size_ = 0;
+    responseMessageQueue_.push_back(item);
+}
+
 void Channel::sleep(int ms)
 {
     thread_.sleep(ms);
@@ -89,7 +101,25 @@ bool Channel::push_back(Message &item)
 
 void Channel::onMessage(Message &message)
 {
-    reactor_->onMessage(message);
+    switch (message.type_) {
+        case vanilla::MessageType::NET_MSG: {
+            break;
+        }
+        case vanilla::MessageType::TIMER_MSG: {
+            poller_->poll();
+            Message item;
+            item.type_ = vanilla::MessageType::TIMER_MSG;
+            item.sessionID_ = 0;
+            item.data_ = nullptr;
+            item.size_ = 0;
+            responseMessageQueue_.push_back(item);
+            break;
+        }
+            
+        default: {
+            break;
+        }
+    }
 }
 
 void Channel::start()
@@ -155,6 +185,8 @@ void *Channel::loop(void *para)
         return channel;
     }
     
+    channel->setProcessing(true);
+    
     while (channel->isProcessing()) {
         Message item;
         if (channel->pop_front(item) == -1) {
@@ -181,8 +213,7 @@ TcpConnection *Channel::getConnection(SessionType sessionID)
 void Channel::init(int channelID)
 {
     poller_  = Poller::createPoller();
-    poller_->addFd(listener_->getListenerFd(), static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN), listener_);
-    processing_ = true;
+    poller_->addFd(listener_->getListenerFd(), static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN), this);
     
     for (auto i = 0; i < MAX_CONNECTIONS; ++i) {
         std::shared_ptr<TcpConnection> connection = std::make_shared<TcpConnection>(poller_.get());
