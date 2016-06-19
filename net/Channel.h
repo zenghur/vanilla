@@ -29,28 +29,26 @@ class Channel : public IOEvent {
 public:
     typedef uint64_t SessionType;
     explicit Channel(TcpListener *listener = nullptr);
-    void init();
+    void init(int channelID);
     int getListenerFd();
     int getChannelID();
     void setChannelID(int channelID);
     void start();
+    void join();
     static void *loop(void *para);
     TcpConnection *getConnection(SessionType sessionID);
 public:
     virtual void canRead(); // 接受连接请求
+    virtual void canWrite();
     SessionType generateSessionID();
     
     void sleep(int ms);
     bool isProcessing();
 public:
-    int pop(Message &item);
-    bool push(Message &item);
+    int pop_front(Message &item);
+    bool push_back(Message &item);
 public:
-    void onMessage(Message &message);
-private:
-    Channel(const Channel&) = delete;
-    Channel &operator=(const Channel&) = delete;
-    
+    void onMessage(Message &message);    
 private:
     bool processing_;
     std::unique_ptr<Poller> poller_;

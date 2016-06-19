@@ -34,7 +34,7 @@ void Mutex::lock()
 
 void Mutex::unLock()
 {
-    if (pthread_mutex_destroy(&mutex_)) {
+    if (pthread_mutex_unlock(&mutex_)) {
         // log
     }
 }

@@ -15,15 +15,11 @@
 
 #include <string>
 
-
-
 namespace vanilla {
     
-class Poller;
     
 class TcpListener {
 public:
-    explicit TcpListener(Poller *poller = nullptr);
     int getListenerFd();
     void listen(std::string ip, uint16_t port);
 private:

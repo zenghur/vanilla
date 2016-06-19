@@ -10,6 +10,7 @@
 #include "SessionIDDispatcher.h"
 #include "PassiveMessageReactor.h"
 #include "Message.h"
+#include "IOModule.h"
 
 
 #include <iostream>
@@ -20,10 +21,8 @@ using namespace vanilla;
 int
 main(void)
 {
-    
-    std::unique_ptr<char[]> data(new char[10]);
-    std::unique_ptr<char[]> datum;
-    datum = std::move(data);
+    IOModule module;
+    module.init("127.0.0.1", 15050);
     return 0;
 }
 

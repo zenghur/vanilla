@@ -2,6 +2,10 @@
 
 #include "Thread.h"
 #include "DateTime.h"
+#include "Error.h"
+#include <iostream>
+
+#include <cassert>
 
 using namespace vanilla;
 
@@ -25,13 +29,21 @@ void Thread::sleep(int ms)
 
 void Thread::join()
 {
-    pthread_join(handle_, NULL);
+    assert(joinable_);
+    if (!pthread_join(handle_, NULL)) {
+        printError();
+    }
+    joinable_ = false;
+    detached_ = false;
 }
 
 
 void Thread::detach()
 {
+    assert(detached_);
     pthread_detach(handle_);
+    joinable_ = false;
+    detached_ = false;
 }
 
 void Thread::exit()

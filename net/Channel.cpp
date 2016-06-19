@@ -77,12 +77,12 @@ void Channel::sleep(int ms)
     thread_.sleep(ms);
 }
 
-int Channel::pop(Message &item)
+int Channel::pop_front(Message &item)
 {
    return responseMessageQueue_.pop_front(item);
 }
 
-bool Channel::push(Message &item)
+bool Channel::push_back(Message &item)
 {
     return responseMessageQueue_.push_back(item);
 }
@@ -95,6 +95,11 @@ void Channel::onMessage(Message &message)
 void Channel::start()
 {
     thread_.start(loop, this);
+}
+
+void Channel::join()
+{
+    thread_.join();
 }
 
 void Channel::canRead()
@@ -137,6 +142,11 @@ void Channel::canRead()
     } while (true);
 }
 
+void Channel::canWrite()
+{
+    
+}
+
 void *Channel::loop(void *para)
 {
     Channel *channel = reinterpret_cast<Channel *>(para);
@@ -147,7 +157,7 @@ void *Channel::loop(void *para)
     
     while (channel->isProcessing()) {
         Message item;
-        if (channel->pop(item) == -1) {
+        if (channel->pop_front(item) == -1) {
             channel->sleep(20);
             continue;
         }
@@ -168,7 +178,7 @@ TcpConnection *Channel::getConnection(SessionType sessionID)
 }
 
 
-void Channel::init()
+void Channel::init(int channelID)
 {
     poller_  = Poller::createPoller();
     poller_->addFd(listener_->getListenerFd(), static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN), listener_);
@@ -178,4 +188,6 @@ void Channel::init()
         std::shared_ptr<TcpConnection> connection = std::make_shared<TcpConnection>(poller_.get());
         connections_.push_back(connection);
     }
+    
+    setChannelID(channelID);
 }

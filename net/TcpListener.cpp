@@ -22,13 +22,10 @@
 using namespace vanilla;
 using namespace std;
 
-TcpListener::TcpListener(Poller *poller): socket_(nullptr)
-{
-    
-}
 
 int TcpListener::getListenerFd()
 {
+    assert(socket_);
     return socket_->getSocketFd();
 }
 

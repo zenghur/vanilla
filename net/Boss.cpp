@@ -23,14 +23,14 @@ void *Boss::loop(void *para)
         return nullptr;
     }
     
+    boss->setProcessing(true);
+    
     while (boss->isProcessing()) {
         Message item;
         if (boss->pop_front(item) == -1) {
             boss->sleep(20);
             continue;
         }
-        
-        
     }
     
     return boss;
@@ -39,6 +39,11 @@ void *Boss::loop(void *para)
 void Boss::start()
 {
     thread_.start(Boss::loop, this);
+}
+
+void Boss::join()
+{
+    thread_.join();
 }
 
 bool Boss::isProcessing()

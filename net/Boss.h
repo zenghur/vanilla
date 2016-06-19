@@ -20,6 +20,7 @@ public:
     Boss();
     static void *loop(void *para);
     void start();
+    void join();
     
     bool isProcessing();
     void setProcessing(bool flag);

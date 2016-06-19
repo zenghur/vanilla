@@ -20,13 +20,16 @@
 
 namespace vanilla {
     
-class Mutex : private vanilla::Noncopyable {
+class Mutex {
 public:
     Mutex();
     ~Mutex();
     void lock();
     void unLock();
+    
 private:
+    Mutex(const Mutex &) = delete;
+    Mutex & operator = (const Mutex &) = delete;
     pthread_mutex_t mutex_;
 };
     
