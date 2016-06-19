@@ -15,9 +15,15 @@ using namespace vanilla;
 
 
 TcpConnection::TcpConnection(Poller *poller): socket_(nullptr),
-                                              poller_(poller)
+                                              poller_(poller),
+                                              sessionID_(-1)
 {
     
+}
+
+uint64_t TcpConnection::getSessionID()
+{
+    return sessionID_;
 }
 
 int TcpConnection::getConnectionFd()
@@ -35,7 +41,7 @@ void TcpConnection::closeConnection()
     socket_->close();
 }
 
-void TcpConnection::init(int fd)
+void TcpConnection::init(int fd, uint64_t sessionID)
 {
     assert(poller_);
     
@@ -44,7 +50,7 @@ void TcpConnection::init(int fd)
     socket_->setNonBlockStatus(true);
     
     poller_->addFd(fd, static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN) | static_cast<Poller::PollerEventType>(PollerEvent::POLLER_OUT), this);
-    
+    sessionID_ = sessionID;
 }
 
 

@@ -19,8 +19,8 @@ namespace vanilla {
 template<typename T>
 class ConcurrentQueue {
 public:
-    bool  push(T &item);
-    int pop(T &item);
+    bool  push_back(T &item);
+    int pop_front(T &item);
     int size();
 private:
     std::list<T> queue_;
@@ -28,7 +28,7 @@ private:
 };
     
 template<typename T>
-bool ConcurrentQueue<T>::push(T &item)
+bool ConcurrentQueue<T>::push_back(T &item)
 {
     MutexLockGuard guard(mutex_);
     try {
@@ -41,7 +41,7 @@ bool ConcurrentQueue<T>::push(T &item)
 }
     
 template<typename T>
-int ConcurrentQueue<T>::pop(T &item)
+int ConcurrentQueue<T>::pop_front(T &item)
 {
     MutexLockGuard guard(mutex_);
     if (!queue_.empty()) {

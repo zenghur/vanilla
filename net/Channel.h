@@ -35,7 +35,7 @@ public:
     void setChannelID(int channelID);
     void start();
     static void *loop(void *para);
-    TcpConnection *getConnection(int sessionID);
+    TcpConnection *getConnection(SessionType sessionID);
 public:
     virtual void canRead(); // 接受连接请求
     SessionType generateSessionID();
@@ -56,7 +56,7 @@ private:
     std::unique_ptr<Poller> poller_;
     std::unique_ptr<MessageReactor> reactor_;
     TcpListener *listener_;
-    std::vector<std::shared_ptr<TcpConnection> > connections;
+    std::vector<std::shared_ptr<TcpConnection> > connections_;
 private:
     ConcurrentQueue<Message> responseMessageQueue_;
 private:

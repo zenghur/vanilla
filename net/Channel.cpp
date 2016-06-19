@@ -56,7 +56,7 @@ vanilla::Channel::SessionType Channel::generateSessionID()
     int hole = 0;
     for (int i = 0; i < MAX_CONNECTIONS; ++i) {
         hole = (currentConnectionIdx_ + i) % MAX_CONNECTIONS;
-        if (connections[hole]->getConnectionFd() == -1) {
+        if (connections_[hole]->getConnectionFd() == -1) {
             currentConnectionIdx_  =  hole;
             ++currentConnectionsCount_;
             SessionType sessionID = SessionIDDispatcher::getSessionId(1, getChannelID(), hole);
@@ -79,12 +79,12 @@ void Channel::sleep(int ms)
 
 int Channel::pop(Message &item)
 {
-   return responseMessageQueue_.pop(item);
+   return responseMessageQueue_.pop_front(item);
 }
 
 bool Channel::push(Message &item)
 {
-    return responseMessageQueue_.push(item);
+    return responseMessageQueue_.push_back(item);
 }
 
 void Channel::onMessage(Message &message)
@@ -123,13 +123,14 @@ void Channel::canRead()
             ::close(clientFd);
             continue;
         }
+        std::shared_ptr<TcpConnection> connection = std::make_shared<TcpConnection>(poller_.get());
+        connection->init(clientFd, sessionID);
+        connections_[currentConnectionIdx_] = connection;
         
-        TcpConnection *connection = new TcpConnection(poller_.get());
-        connection->init(clientFd);
-        
-        static int connections = 0;
         int port = be16toh(clientAddr.sin_port);
         std::string ip(inet_ntoa(clientAddr.sin_addr));
+        
+        std::cout << ip << ":" << port << std::endl;
         
         
         
@@ -156,10 +157,13 @@ void *Channel::loop(void *para)
     return channel;
 }
 
-TcpConnection *getConnection(int sessionID)
+TcpConnection *Channel::getConnection(SessionType sessionID)
 {
-    TcpConnection *connection = NULL;
-    
+    TcpConnection *connection = nullptr;
+    int hole = SessionIDDispatcher::getAutoIncrementID(sessionID);
+    if (hole >= 0 || hole < MAX_CONNECTIONS) {
+        connection = connections_[hole].get();
+    }
     return connection;
 }
 
@@ -172,6 +176,6 @@ void Channel::init()
     
     for (auto i = 0; i < MAX_CONNECTIONS; ++i) {
         std::shared_ptr<TcpConnection> connection = std::make_shared<TcpConnection>(poller_.get());
-        connections.push_back(connection);
+        connections_.push_back(connection);
     }
 }

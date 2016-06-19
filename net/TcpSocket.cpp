@@ -363,6 +363,7 @@ int TcpSocket::recv()
         }
         else {
             // 读完了
+            
             recvLen_ = 0;
             payLoadSize_ = 0;
         }
