@@ -4,12 +4,14 @@
 
 #include "TcpConnection.h"
 #include "TcpSocket.h"
+#include "Channel.h"
 
 using namespace vanilla;
 
 
 TcpConnection::TcpConnection(Poller *poller): socket_(nullptr),
                                               poller_(poller),
+                                              channel_(nullptr),
                                               sessionID_(-1)
 {
     
@@ -35,9 +37,10 @@ void TcpConnection::closeConnection()
     socket_->close();
 }
 
-void TcpConnection::init(int fd, uint64_t sessionID)
+void TcpConnection::init(Channel *channel, int fd, uint64_t sessionID)
 {
     assert(poller_);
+    channel_ = channel;
     
     socket_  = std::make_shared<TcpSocket>(fd);
     TcpSocket::makeNonBlock(fd);
@@ -50,7 +53,7 @@ void TcpConnection::init(int fd, uint64_t sessionID)
 
 void TcpConnection::canRead()
 {
-    int ret = socket_->recv();
+    int ret = socket_->recv(this);
     if (ret == -1) {
         closeConnection();
     }
@@ -62,6 +65,12 @@ void TcpConnection::canWrite()
     if (ret == -1) {
         closeConnection();
     }
+}
+
+void TcpConnection::receiveMsg(Message *message)
+{
+    message->sessionID_ = sessionID_;
+    channel_->sendMessageToBoss(message);
 }
 
 void TcpConnection::send(char *data, int len)

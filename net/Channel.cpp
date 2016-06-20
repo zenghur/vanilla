@@ -20,6 +20,7 @@ using namespace vanilla;
 
 Channel::Channel(TcpListener *listener): poller_(nullptr),
                                          listener_(listener),
+                                         module_(nullptr),
                                          processing_(false),
                                          currentConnectionIdx_(0),
                                          currentConnectionsCount_(0)
@@ -73,7 +74,6 @@ void Channel::setProcessing(bool flag)
     Message item;
     item.type_ = vanilla::MessageType::TIMER_MSG;
     item.sessionID_ = 0;
-    item.data_ = nullptr;
     item.size_ = 0;
     responseMessageQueue_.push_back(item);
 }
@@ -93,10 +93,17 @@ bool Channel::push_back(Message &item)
     return responseMessageQueue_.push_back(item);
 }
 
-void Channel::onMessage(Message &message)
+void Channel::onResponseMessage(Message *message)
 {
-    switch (message.type_) {
+    if (!message) {
+        return;
+    }
+    switch (message->type_) {
         case vanilla::MessageType::NET_MSG: {
+            TcpConnection *connection = getConnection(message->sessionID_);
+            if (connection) {
+                connection->send(message->data_, message->size_);
+            }
             break;
         }
         case vanilla::MessageType::TIMER_MSG: {
@@ -114,6 +121,15 @@ void Channel::onMessage(Message &message)
             break;
         }
     }
+}
+
+void Channel::onRequestMessage(Message *message)
+{
+    if (!message) {
+        return;
+    }
+    
+    module_->sendMessageToBoss(message);
 }
 
 void Channel::start()
@@ -153,7 +169,7 @@ void Channel::canRead()
             continue;
         }
         std::shared_ptr<TcpConnection> connection = std::make_shared<TcpConnection>(poller_.get());
-        connection->init(clientFd, sessionID);
+        connection->init(this, clientFd, sessionID);
         connections_[currentConnectionIdx_] = connection;
         
         int port = be16toh(clientAddr.sin_port);
@@ -167,6 +183,11 @@ void Channel::canRead()
 }
 
 void Channel::canWrite()
+{
+    
+}
+
+void Channel::receiveMsg(Message *message)
 {
     
 }
@@ -187,7 +208,7 @@ void *Channel::loop(void *para)
             channel->sleep(20);
             continue;
         }
-        channel->onMessage(item);
+        channel->onResponseMessage(&item);
     }
     
     return channel;
@@ -203,9 +224,15 @@ TcpConnection *Channel::getConnection(SessionType sessionID)
     return connection;
 }
 
-
-void Channel::init(int channelID)
+bool Channel::sendMessageToBoss(Message *message)
 {
+    return module_->sendMessageToBoss(message);
+}
+
+
+void Channel::init(IOModule *module, int channelID)
+{
+    module_ = module;
     poller_  = Poller::createPoller();
     poller_->addFd(listener_->getListenerFd(), static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN), this);
     

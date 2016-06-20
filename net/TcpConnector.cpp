@@ -15,6 +15,11 @@ void TcpConnector::canWrite()
     
 }
 
+void TcpConnector::receiveMsg()
+{
+    
+}
+
 void TcpConnector::connect(std::string peerName, uint16_t port)
 {
     

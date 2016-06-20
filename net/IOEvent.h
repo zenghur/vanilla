@@ -1,21 +1,19 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef IOEvent_h
-#define IOEvent_h
-
-#include "Noncopyable.h"
+#ifndef NET_IOEVENT_H_
+#define NET_IOEVENT_H_
 
 namespace vanilla {
 
-class IOEvent : private vanilla::Noncopyable {
-public:
+    class Message;
+    
+class IOEvent {
+ public:
     virtual void canRead() = 0;
     virtual void canWrite() = 0;
+    virtual void receiveMsg(Message *message) = 0;
+
 };
+}  // namespace vanilla
 
-
-    
-    
-}
-
-#endif /* IOEvent_h */
+#endif  // NET_IOEVENT_H_

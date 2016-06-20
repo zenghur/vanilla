@@ -8,8 +8,12 @@
 
 #include "Channel.h"
 #include "Boss.h"
+#include "TcpListener.h"
 
 namespace vanilla {
+    
+class Channel;
+    
 class IOModule {
  public:
     void init(std::string ip, uint16_t port);

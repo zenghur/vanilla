@@ -3,10 +3,7 @@
 #ifndef TcpListener_h
 #define TcpListener_h
 
-#include "Noncopyable.h"
 #include "TcpSocket.h"
-#include "IOEvent.h"
-
 #include <string>
 
 namespace vanilla {

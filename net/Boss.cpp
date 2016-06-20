@@ -19,6 +19,7 @@ void *Boss::loop(void *para) {
             boss->sleep(20);
             continue;
         }
+        delete [] item.data_;
     }
     return boss;
 }

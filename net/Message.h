@@ -4,20 +4,18 @@
 #define Message_h
 
 #include <memory>
+#include <vector>
 
 #include "SessionIDDispatcher.h"
 
 namespace vanilla {
 
     
-class Message {
-public:
+struct Message {
     Message();
-    Message(const Message &other) = default;
-    Message &operator=(const Message &other) = default;
     int type_;
     SessionIDDispatcher::SessionType sessionID_;
-    std::shared_ptr<char> data_;
+    char* data_;
     int size_;
 };
     

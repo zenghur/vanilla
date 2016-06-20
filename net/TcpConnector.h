@@ -13,6 +13,7 @@ class TcpConnector : public IOEvent {
 public:
     virtual void canRead();
     virtual void canWrite();
+    virtual void receiveMsg();
     
     void connect(std::string peerName, uint16_t port);
     

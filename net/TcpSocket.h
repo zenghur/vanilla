@@ -12,6 +12,9 @@
 
 namespace vanilla {
 
+class Channel;
+class IOEvent;
+
 class TcpSocket : private vanilla::Noncopyable {
 public:
     static const int SND_BUF_SIZE = 64 * 1024;
@@ -41,7 +44,7 @@ public:
     int putResponseDataInBuf(char *data, int len);
 public:
     // 接收相关
-    int recv();
+    int recv(IOEvent *event);
 public:
     static std::shared_ptr<TcpSocket> createListener(std::string ip, uint16_t port);
     static std::shared_ptr<TcpSocket> createConnector(std::string peerName, uint16_t port);

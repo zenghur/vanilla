@@ -1,3 +1,5 @@
+// copyright 2016 zenghur
+
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -14,12 +16,9 @@
 
 #include <iostream>
 
-using namespace std;
-using namespace vanilla;
+using vanilla::IOModule;
 
-int
-main(void)
-{
+int main(void) {
     IOModule module;
     module.init("127.0.0.1", 15050);
     return 0;

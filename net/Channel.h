@@ -8,6 +8,7 @@
 #include "ConcurrentQueue.h"
 #include "Message.h"
 #include "IOEvent.h"
+#include "IOModule.h"
 
 
 #include <vector>
@@ -16,12 +17,13 @@ namespace vanilla {
     
 class TcpListener;
 class TcpConnection;
+class IOModule;
     
 class Channel : public IOEvent {
  public:
     typedef uint64_t SessionType;
     explicit Channel(TcpListener *listener = nullptr);
-    void init(int channelID);
+    void init(IOModule *module, int channelID);
     int getListenerFd();
     int getChannelID();
     void setChannelID(int channelID);
@@ -29,10 +31,12 @@ class Channel : public IOEvent {
     void join();
     static void *loop(void *para);
     TcpConnection *getConnection(SessionType sessionID);
+    bool sendMessageToBoss(Message *message);
   
  public:
     virtual void canRead();  // 接受连接请求
     virtual void canWrite();
+    virtual void receiveMsg(Message *message);
     SessionType generateSessionID();
     void sleep(int ms);
     bool isProcessing();
@@ -43,12 +47,14 @@ class Channel : public IOEvent {
     bool push_back(Message &item);
   
  public:
-    void onMessage(Message &message);
+    void onResponseMessage(Message *message);
+    void onRequestMessage(Message *message);
   
  private:
     bool processing_;
     std::unique_ptr<Poller> poller_;
     TcpListener *listener_;
+    IOModule *module_;
     std::vector<std::shared_ptr<TcpConnection> > connections_;
   
  private:

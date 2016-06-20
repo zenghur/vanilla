@@ -5,8 +5,11 @@
 
 namespace vanilla {
 enum MessageType : int {
-    NET_MSG = 0,
-    TIMER_MSG = 1,
+    NET_MSG,
+    NET_MSG_ACCEPT,
+    NET_MSG_CLOSE,
+    NET_MSG_CONNECT,
+    TIMER_MSG,
 };
 
     

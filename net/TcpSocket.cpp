@@ -18,6 +18,9 @@
 #include "SocketOption.h"
 #include "Error.h"
 #include "Endian.h"
+#include "IOEvent.h"
+#include "MessageType.h"
+#include "Message.h"
 
 using namespace vanilla;
 
@@ -327,7 +330,7 @@ int TcpSocket::putResponseDataInBuf(char *data, int len)
     return 0;
 }
 
-int TcpSocket::recv()
+int TcpSocket::recv(IOEvent *event)
 {
     while (true) {
         int expectantBytes;
@@ -356,8 +359,13 @@ int TcpSocket::recv()
             }
         }
         else {
-            // 读完了
-            
+            Message item;
+            item.type_ = NET_MSG;
+            item.data_ = new char[payLoadSize_];
+            item.size_ = payLoadSize_;
+            if (event) {
+                event->receiveMsg(&item);
+            }
             recvLen_ = 0;
             payLoadSize_ = 0;
         }
