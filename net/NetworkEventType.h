@@ -1,10 +1,4 @@
-//
-//  NetworkEventType.hpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/19.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #ifndef NetworkEventType_h
 #define NetworkEventType_h

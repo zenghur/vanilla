@@ -1,49 +1,35 @@
-//
-//  Boss.hpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/19.
-//
-//
+// Copyright (c) 2016 zenghur
 
-#ifndef Boss_h
-#define Boss_h
+#ifndef NET_BOSS_H_
+#define NET_BOSS_H_
 
 #include "ConcurrentQueue.h"
 #include "Message.h"
 #include "Thread.h"
 
 namespace vanilla {
-
+    
 class Boss {
-public:
+ public:
     Boss();
     static void *loop(void *para);
     void start();
     void join();
-    
     bool isProcessing();
     void setProcessing(bool flag);
-    
-    int pop_front(Message &item);
-    bool push_back(Message &item);
-    
+    int pop_front(Message *item);
+    bool push_back(Message *item);
     void sleep(int ms);
     
-private:
+ private:
     Boss(const Boss &) = delete;
     Boss &operator = (const Boss &) = delete;
     
-private:
+ private:
     bool processing_;
     ConcurrentQueue<Message> requestMessageQueue_;
     Thread thread_;
 };
-    
-    
-    
-}
+}  // namespace vanilla
 
-
-
-#endif /* Boss_h */
+#endif  // NET_BOSS_H_

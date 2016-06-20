@@ -1,10 +1,4 @@
-//
-//  SessionIDDispatcher.hpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/11.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #ifndef SessionIDDispatcher_h
 #define SessionIDDispatcher_h

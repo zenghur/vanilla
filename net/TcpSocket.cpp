@@ -1,10 +1,4 @@
-//
-//  Socket.cpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/5.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #include <unistd.h>
 #include <sys/socket.h>

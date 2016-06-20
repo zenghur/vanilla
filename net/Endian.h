@@ -1,10 +1,4 @@
-//
-//  Endian.h
-//  Vanilla
-//
-//  Created by ZengHongru on 16/4/3.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #ifndef Endian_h
 #define Endian_h

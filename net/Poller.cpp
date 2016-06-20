@@ -1,10 +1,4 @@
-//
-//  Poller.cpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/4/15.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #include "Poller.h"
 

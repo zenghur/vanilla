@@ -1,10 +1,4 @@
-//
-//  IgnoreSigPipe.hpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/9.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #ifndef IgnoreSigPipe_h
 #define IgnoreSigPipe_h

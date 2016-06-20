@@ -1,3 +1,5 @@
+// Copyright (c) 2016 zenghur
+
 #ifndef VANILLA_NET_POLLER_H_
 #define VANILLA_NET_POLLER_H_
 

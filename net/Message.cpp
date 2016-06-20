@@ -1,10 +1,4 @@
-//
-//  Message.cpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/18.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #include "Message.h"
 

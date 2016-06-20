@@ -1,10 +1,4 @@
-//
-//  Message.hpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/18.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #ifndef Message_h
 #define Message_h

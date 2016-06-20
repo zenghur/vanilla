@@ -1,10 +1,4 @@
-//
-//  Channel.cpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/10.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #include "Channel.h"
 #include "TcpListener.h"

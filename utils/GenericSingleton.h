@@ -1,10 +1,4 @@
-//
-//  GenericSingleton.hpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/4/2.
-//
-//
+// Copyright (c) 2016 zenghur
 
 // Double-checked locking pattern(DCLP)的做法有问题，stackoverflow有讨论。
 // Scott Meyers and Andrei Alexandrescu对此有话要说！文章名叫C++ and the Perils of Double-Checked Locking。

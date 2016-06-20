@@ -1,10 +1,4 @@
-//
-//  TcpConnector.hpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/5.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #ifndef TcpConnector_h
 #define TcpConnector_h

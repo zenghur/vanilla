@@ -1,10 +1,4 @@
-//
-//  Channel.hpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/10.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #ifndef Channel_h
 #define Channel_h

@@ -1,10 +1,4 @@
-//
-//  Singleton.h
-//  Vanilla
-//
-//  Created by ZengHongru on 16/4/1.
-//
-//  In C++11, this is a thread-safe method.
+// Copyright (c) 2016 zenghur
 
 #ifndef Singleton_h
 #define Singleton_h

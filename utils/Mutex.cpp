@@ -1,10 +1,4 @@
-//
-//  Mutex.cpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/4/7.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #include "Mutex.h"
 

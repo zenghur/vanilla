@@ -1,10 +1,4 @@
-//
-//  IOModule.cpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/19.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #include <memory>
 

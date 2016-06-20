@@ -1,10 +1,4 @@
-//
-//  Error.hpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/4/13.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #ifndef Error_hpp
 #define Error_hpp

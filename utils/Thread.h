@@ -1,4 +1,4 @@
-// @author: zenghongru@gmail.com
+// Copyright (c) 2016 zenghur
 
 #ifndef THREAD_H
 #define THREAD_H

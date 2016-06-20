@@ -1,10 +1,4 @@
-//
-//  IgnoreSigPipe.cpp
-//  Vanilla
-//
-//  Created by ZengHongru on 16/6/9.
-//
-//
+// Copyright (c) 2016 zenghur
 
 #include <sys/signal.h>
 
