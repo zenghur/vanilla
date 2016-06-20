@@ -15,7 +15,7 @@ namespace vanilla {
     
     
 class Thread : private vanilla::Noncopyable {
-public:
+ public:
     typedef void *(*ThreadStartFun)(void *);
     Thread();
     void sleep(int ms);
@@ -26,7 +26,8 @@ public:
     pthread_t getId();
     void cancel();
     ~Thread();
-private:
+  
+ private:
     bool joinable_;
     bool detached_;
     pthread_t handle_;

@@ -6,6 +6,8 @@ project "Vanilla" -- project name
 	language "C++" 
 	targetdir "bin/"
 	includedirs {"shared/**"}
+	includedirs {"net/"}
+
 	files {"*.cpp", "*.h"}
 	files {"utils/**.cpp"}
 	files {"utils/**.h"}
