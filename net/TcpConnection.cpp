@@ -6,7 +6,7 @@
 #include "TcpSocket.h"
 #include "Channel.h"
 
-using namespace vanilla;
+using vanilla::TcpConnection;
 
 
 TcpConnection::TcpConnection(Poller *poller): socket_(nullptr),

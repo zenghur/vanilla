@@ -1,26 +1,25 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef Socket_h
-#define Socket_h
+#ifndef NET_TCPSOCKET_H_
+#define NET_TCPSOCKET_H_
 
 #include <stdint.h>
 
 #include <string>
 #include <vector>
 
-#include "Noncopyable.h"
-
 namespace vanilla {
 
 class Channel;
 class IOEvent;
 
-class TcpSocket : private vanilla::Noncopyable {
-public:
+class TcpSocket {
+ public:
     static const int SND_BUF_SIZE = 64 * 1024;
     static const int RCV_BUF_SIZE = 64 * 1024;
     static const int RCV_HEADER_SIZE = 4;
-public:
+    
+ public:
     explicit TcpSocket(int fd = -1);
     ~TcpSocket();
     void close();
@@ -36,19 +35,27 @@ public:
     static void makeNonBlock(int fd);
     void setNonBlockStatus(bool flag);
     bool getNonBlockStatus();
-public:
+    
+ public:
     // 发送相关
     int send(char *data, int len);
     int getSendLen();
     int sendBuf();
     int putResponseDataInBuf(char *data, int len);
-public:
+    
+ public:
     // 接收相关
     int recv(IOEvent *event);
-public:
+    
+ public:
     static std::shared_ptr<TcpSocket> createListener(std::string ip, uint16_t port);
     static std::shared_ptr<TcpSocket> createConnector(std::string peerName, uint16_t port);
-private:
+    
+ private:
+    TcpSocket(const TcpSocket &) = delete;
+    TcpSocket& operator = (const TcpSocket &) = delete;
+    
+ private:
     bool isNonBlocking_;
     int sockfd_;
     
@@ -63,6 +70,6 @@ private:
     int payLoadSize_;
 };
     
-}
+}  // namespace vanilla
 
-#endif /* Socket_h */
+#endif  // NET_TCPSOCKET_H_

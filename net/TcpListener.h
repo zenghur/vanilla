@@ -1,23 +1,23 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef TcpListener_h
-#define TcpListener_h
+#ifndef NET_TCPLISTENER_H_
+#define NET_TCPLISTENER_H_
 
 #include "TcpSocket.h"
+
 #include <string>
 
 namespace vanilla {
     
-    
 class TcpListener {
-public:
+ public:
     int getListenerFd();
     void listen(std::string ip, uint16_t port);
-private:
+    
+ private:
     std::shared_ptr<TcpSocket> socket_;
 };
-    
-    
-}
+} // namespace vanilla
 
-#endif /* TcpListener_h */
+#endif  // NET_TCPLISTENER_H_
+

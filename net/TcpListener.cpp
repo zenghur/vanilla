@@ -1,20 +1,21 @@
 // Copyright (c) 2016 zenghur
 
 #include "TcpListener.h"
-#include "Error.h"
 
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include "Endian.h"
-#include "Poller.h"
-#include "TcpConnection.h"
+#include <arpa/inet.h>
 
 #include <iostream>
 #include <cassert>
-#include <arpa/inet.h>
 
-using namespace vanilla;
-using namespace std;
+#include "Endian.h"
+#include "Poller.h"
+#include "TcpConnection.h"
+#include "Error.h"
+
+using vanilla::TcpListener;
+using std::string;
 
 
 int TcpListener::getListenerFd()
