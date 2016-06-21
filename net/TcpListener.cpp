@@ -15,17 +15,13 @@
 #include "Error.h"
 
 using vanilla::TcpListener;
-using std::string;
 
-
-int TcpListener::getListenerFd()
-{
+int TcpListener::getListenerFd() {
     assert(socket_);
     return socket_->getSocketFd();
 }
 
-void TcpListener::listen(std::string ip, uint16_t port)
-{
+void TcpListener::listen(std::string ip, uint16_t port) {
     socket_ = TcpSocket::createListener(ip, port);
 }
 

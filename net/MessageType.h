@@ -1,7 +1,7 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef MessageType_h
-#define MessageType_h
+#ifndef NET_MESSAGETYPE_H_
+#define NET_MESSAGETYPE_H_
 
 namespace vanilla {
 enum MessageType : int {
@@ -11,10 +11,6 @@ enum MessageType : int {
     NET_MSG_CONNECT,
     TIMER_MSG,
 };
+}  // namespace vanilla
 
-    
-};
-
-
-
-#endif /* MessageType_h */
+#endif  // NET_MESSAGETYPE_H_

@@ -16,17 +16,14 @@ class TcpConnector : public IOEvent {
     void connect(std::string peerName, uint16_t port);
     int getConnectorFd();
     
-private:
+ private:
     TcpConnector(const TcpConnector &) = delete;
     TcpConnector& operator = (const TcpConnector&) = delete;
     
  private:
     std::shared_ptr<TcpSocket> socket_;
 };
-    
-    
+  
 }  // namespace vanilla
-
-
 
 #endif  // NET_TCPCONNECTOR_H_

@@ -22,8 +22,6 @@ class SocketOption {
     static struct timeval getSndTimeO(int fd);
     static struct timeval getRcvTimeO(int fd);
 };
-    
-    
 }  // namespace vanilla
 
 #endif  // NET_SOCKETOPTION_H_

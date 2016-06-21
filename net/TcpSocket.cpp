@@ -1,5 +1,7 @@
 // Copyright (c) 2016 zenghur
 
+#include "TcpSocket.h"
+
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -7,14 +9,11 @@
 #include <arpa/inet.h>
 #include <sys/fcntl.h>
 #include <netdb.h>
-
-#include <iostream>
-#include <sstream>
-#include <cassert>
 #include <err.h>
 
+#include <iostream>
+#include <cassert>
 
-#include "TcpSocket.h"
 #include "SocketOption.h"
 #include "Error.h"
 #include "Endian.h"
@@ -22,7 +21,7 @@
 #include "MessageType.h"
 #include "Message.h"
 
-using namespace vanilla;
+using vanilla::TcpSocket;
 
 TcpSocket::TcpSocket(int fd): sockfd_(fd),
                               isNonBlocking_(false),
@@ -31,19 +30,15 @@ TcpSocket::TcpSocket(int fd): sockfd_(fd),
                               sendLen_(0),
                               recvBuf_(RCV_BUF_SIZE),
                               recvLen_(0),
-                              payLoadSize_(0)
-{
-   
+                              payLoadSize_(0) {
 }
 
-TcpSocket::~TcpSocket()
-{
+TcpSocket::~TcpSocket() {
     close();
 }
 
 
-void TcpSocket::close()
-{
+void TcpSocket::close() {
     ::close(sockfd_);
     sockfd_ = -1;
     isNonBlocking_ = false;
@@ -53,23 +48,19 @@ void TcpSocket::close()
     payLoadSize_ = 0;
 }
 
-int TcpSocket::getSocketFd()
-{
+int TcpSocket::getSocketFd() {
     return sockfd_;
 }
 
-void TcpSocket::setNonBlockStatus(bool flag)
-{
+void TcpSocket::setNonBlockStatus(bool flag) {
     isNonBlocking_ = flag;
 }
 
-bool TcpSocket::getNonBlockStatus()
-{
+bool TcpSocket::getNonBlockStatus() {
     return isNonBlocking_;
 }
 
-void TcpSocket::makeNonBlock(int fd)
-{
+void TcpSocket::makeNonBlock(int fd) {
     assert(fd >= 0);
     
     int flags = fcntl(fd, F_GETFL, 0);
@@ -83,8 +74,7 @@ void TcpSocket::makeNonBlock(int fd)
     }
 }
 
-std::shared_ptr<TcpSocket> TcpSocket::createListener(std::string ip, uint16_t port)
-{
+std::shared_ptr<TcpSocket> TcpSocket::createListener(std::string ip, uint16_t port) {
     int fd = socket(PF_INET, SOCK_STREAM, 0);
     if (fd < 0) {
         printError();
@@ -104,8 +94,7 @@ std::shared_ptr<TcpSocket> TcpSocket::createListener(std::string ip, uint16_t po
     int flag = inet_pton(AF_INET, ip.c_str(), &addr.sin_addr.s_addr);
     if (flag == -1) {
         printError();
-    }
-    else if (flag == 0) {
+    } else if (flag == 0) {
         printError("IP地址不正确");
     }
     
@@ -125,8 +114,7 @@ std::shared_ptr<TcpSocket> TcpSocket::createListener(std::string ip, uint16_t po
     return std::move(socket);
 }
 
-std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint16_t port)
-{
+std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint16_t port) {
     int fd = socket(PF_INET, SOCK_STREAM, 0);
     if (fd < 0) {
         printError();
@@ -141,8 +129,7 @@ std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint
     return socket;
 }
 
-int TcpSocket::nonBlockSend(char *data, size_t len)
-{
+int TcpSocket::nonBlockSend(char *data, size_t len) {
     assert(isNonBlocking_);
     
     ssize_t totalLen = len;
@@ -150,16 +137,11 @@ int TcpSocket::nonBlockSend(char *data, size_t len)
         ssize_t ret;
         
         while ((ret = ::send(sockfd_, data, len, 0)) != 0 && (len != 0)) {
-            
-            if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN) ) {
+            if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
                 break;
-            }
-            
-            else if (ret == -1 && errno == EINTR) {
+            } else if (ret == -1 && errno == EINTR) {
                 continue;
-            }
-            
-            else if (ret == -1) {
+            } else if (ret == -1) {
                 return -1;
             }
             
@@ -170,8 +152,7 @@ int TcpSocket::nonBlockSend(char *data, size_t len)
     return totalLen - len;
 }
 
-int TcpSocket::nonBlockRecv(char *data, size_t len)
-{
+int TcpSocket::nonBlockRecv(char *data, size_t len) {
     assert(isNonBlocking_);
     ssize_t totalLen = len;
     if (len > 0) {
@@ -179,11 +160,9 @@ int TcpSocket::nonBlockRecv(char *data, size_t len)
         while ((ret == ::recv(sockfd_, data, len, 0)) != 0 && (len != 0)) {
             if (errno == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
                 break;
-            }
-            else if (errno == -1 && errno == EINTR) {
+            } else if (errno == -1 && errno == EINTR) {
                 continue;
-            }
-            else if (errno == -1) {
+            } else if (errno == -1) {
                 return -1;
             }
             len -= ret;
@@ -193,8 +172,7 @@ int TcpSocket::nonBlockRecv(char *data, size_t len)
     return totalLen - len;
 }
 
-int TcpSocket::blockSend(char *data, size_t len)
-{
+int TcpSocket::blockSend(char *data, size_t len) {
     assert(!isNonBlocking_);
     
     ssize_t ret;
@@ -203,14 +181,9 @@ int TcpSocket::blockSend(char *data, size_t len)
     while (len != 0 && (ret = ::send(sockfd_, data, len, 0)) != 0) {
         if (ret == -1 && errno == EINTR) {
             continue;
-        }
-        
-        // 设置SO_RCVTIMEO 和 SO_SNDTIMEO 在阻塞模式下也可能发送eagain
-        else if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
+        } else if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {  // 设置SO_RCVTIMEO 和 SO_SNDTIMEO 在阻塞模式下也可能发送eagain
             break;
-        }
-        
-        else if (ret == -1) {
+        } else if (ret == -1) {
             return -1;
         }
         
@@ -220,8 +193,7 @@ int TcpSocket::blockSend(char *data, size_t len)
     return totalLen - len;
 }
 
-int TcpSocket::blockRecv(char *data, size_t len)
-{
+int TcpSocket::blockRecv(char *data, size_t len) {
     assert(!isNonBlocking_);
     
     ssize_t ret;
@@ -230,12 +202,9 @@ int TcpSocket::blockRecv(char *data, size_t len)
     while (len != 0 && (ret == ::recv(sockfd_, data, len, 0)) != 0) {
         if (ret == -1 && errno == EINTR) {
             continue;
-        }
-        else if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
+        } else if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
             break;
-        }
-        
-        else if (ret == -1) {
+        } else if (ret == -1) {
             return -1;
         }
         data += ret;
@@ -244,13 +213,11 @@ int TcpSocket::blockRecv(char *data, size_t len)
     return totalLen - len;
 }
 
-int TcpSocket::getSendLen()
-{
+int TcpSocket::getSendLen() {
     return sendLen_;
 }
 
-int TcpSocket::send(char *data, int len)
-{
+int TcpSocket::send(char *data, int len) {
     int ret = 0;
     do {
         ret = sendBuf();
@@ -264,8 +231,7 @@ int TcpSocket::send(char *data, int len)
             if (ret == -1) {
                 break;
             }
-        }
-        else {
+        } else {
             ret = nonBlockSend(data, len);
             if (ret == -1) {
                 break;
@@ -278,19 +244,16 @@ int TcpSocket::send(char *data, int len)
                 }
             }
         }
-        
-    } while(false);
+    } while (false);
     return ret;
 }
 
-int TcpSocket::sendBuf()
-{
+int TcpSocket::sendBuf() {
     while (sendLen_ > 0) {
         int bytesTobeSent = 0;
         if (sendBufStartIndex_ + sendLen_ > SND_BUF_SIZE) {
             bytesTobeSent = SND_BUF_SIZE - sendBufStartIndex_;
-        }
-        else {
+        } else {
             bytesTobeSent = sendLen_;
         }
         
@@ -310,8 +273,7 @@ int TcpSocket::sendBuf()
     return 0;
 }
 
-int TcpSocket::putResponseDataInBuf(char *data, int len)
-{
+int TcpSocket::putResponseDataInBuf(char *data, int len) {
     if (sendLen_ + len > SND_BUF_SIZE) {
         return -1;
     }
@@ -320,8 +282,7 @@ int TcpSocket::putResponseDataInBuf(char *data, int len)
     
     if (sendBufStartIndex_ < tailIndex) {
         std::copy(data, data + len, &sendBuf_[sendBufStartIndex_ + sendLen_]);
-    }
-    else {
+    } else {
         std::copy(data, data + len, &sendBuf_[tailIndex + 1]);
     }
     
@@ -330,14 +291,12 @@ int TcpSocket::putResponseDataInBuf(char *data, int len)
     return 0;
 }
 
-int TcpSocket::recv(IOEvent *event)
-{
+int TcpSocket::recv(IOEvent *event) {
     while (true) {
         int expectantBytes;
         if (payLoadSize_ == 0) {
             expectantBytes = RCV_HEADER_SIZE - recvLen_;
-        }
-        else {
+        } else {
             expectantBytes = RCV_HEADER_SIZE + payLoadSize_ - recvLen_;
         }
         
@@ -357,8 +316,7 @@ int TcpSocket::recv(IOEvent *event)
             if (payLoadSize_ > RCV_BUF_SIZE) {
                 return -1;
             }
-        }
-        else {
+        } else {
             Message item;
             item.type_ = NET_MSG;
             item.data_ = new char[payLoadSize_];

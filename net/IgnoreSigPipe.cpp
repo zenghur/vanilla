@@ -1,14 +1,15 @@
 // Copyright (c) 2016 zenghur
 
+#include "IgnoreSigPipe.h"
+
 #include <sys/signal.h>
 
-#include "IgnoreSigPipe.h"
 #include "GenericSingleton.h"
 
-using namespace vanilla;
+using vanilla::IgnoreSigPipe;
+using vanilla::GenericSingleton;
 
-IgnoreSigPipe::IgnoreSigPipe()
-{
+IgnoreSigPipe::IgnoreSigPipe() {
     ::signal(SIGPIPE, SIG_IGN);
 }
 

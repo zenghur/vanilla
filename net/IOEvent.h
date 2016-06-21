@@ -4,15 +4,12 @@
 #define NET_IOEVENT_H_
 
 namespace vanilla {
-
-    class Message;
-    
+class Message;    
 class IOEvent {
  public:
     virtual void canRead() = 0;
     virtual void canWrite() = 0;
     virtual void receiveMsg(Message *message) = 0;
-
 };
 }  // namespace vanilla
 

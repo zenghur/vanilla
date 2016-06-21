@@ -2,16 +2,11 @@
 
 #include "Message.h"
 
-#include <utility>
-
-using namespace vanilla;
-
+using vanilla::Message;
 
 Message::Message(): type_(0),
                     sessionID_(0),
                     data_(nullptr),
-                    size_(0)
-{
-    
+                    size_(0) {
 }
 

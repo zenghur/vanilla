@@ -2,32 +2,22 @@
 
 #include "TcpConnector.h"
 
-using namespace vanilla;
+using vanilla::TcpConnector;
 
-
-void TcpConnector::canRead()
-{
-    
+void TcpConnector::canRead() {
 }
 
-void TcpConnector::canWrite()
-{
-    
+void TcpConnector::canWrite() {
 }
 
-void TcpConnector::receiveMsg()
-{
-    
+void TcpConnector::receiveMsg() {
 }
 
-void TcpConnector::connect(std::string peerName, uint16_t port)
-{
-    
+void TcpConnector::connect(std::string peerName, uint16_t port) {
 }
 
 
-int TcpConnector::getConnectorFd()
-{
+int TcpConnector::getConnectorFd() {
     return socket_->getSocketFd();
 }
 

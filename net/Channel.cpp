@@ -1,11 +1,6 @@
 // Copyright (c) 2016 zenghur
 
 #include "Channel.h"
-#include "TcpListener.h"
-#include "TcpConnection.h"
-#include "Endian.h"
-#include "SessionIDDispatcher.h"
-#include "MessageType.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -16,35 +11,37 @@
 #include <string>
 #include <iostream>
 
-using namespace vanilla;
+#include "TcpListener.h"
+#include "TcpConnection.h"
+#include "Endian.h"
+#include "SessionIDDispatcher.h"
+#include "MessageType.h"
+
+
+using vanilla::Channel;
+using vanilla::TcpConnection;
 
 Channel::Channel(TcpListener *listener): poller_(nullptr),
                                          listener_(listener),
                                          module_(nullptr),
                                          processing_(false),
                                          currentConnectionIdx_(0),
-                                         currentConnectionsCount_(0)
-{
-    
+                                         currentConnectionsCount_(0) {
 }
 
-int Channel::getListenerFd()
-{
+int Channel::getListenerFd() {
     return listener_->getListenerFd();
 }
 
-int Channel::getChannelID()
-{
+int Channel::getChannelID() {
     return channelID_;
 }
 
-void Channel::setChannelID(int channelID)
-{
+void Channel::setChannelID(int channelID) {
     channelID_ = channelID;
 }
 
-vanilla::Channel::SessionType Channel::generateSessionID()
-{
+vanilla::Channel::SessionType Channel::generateSessionID() {
     if (currentConnectionsCount_ >= MAX_CONNECTIONS) {
         return 0;
     }
@@ -59,17 +56,14 @@ vanilla::Channel::SessionType Channel::generateSessionID()
             return sessionID;
         }
     }
-    
     return 0;
 }
 
-bool Channel::isProcessing()
-{
+bool Channel::isProcessing() {
     return processing_ == true;
 }
 
-void Channel::setProcessing(bool flag)
-{
+void Channel::setProcessing(bool flag) {
     processing_ = flag;
     Message item;
     item.type_ = vanilla::MessageType::TIMER_MSG;
@@ -78,23 +72,19 @@ void Channel::setProcessing(bool flag)
     responseMessageQueue_.push_back(item);
 }
 
-void Channel::sleep(int ms)
-{
+void Channel::sleep(int ms) {
     thread_.sleep(ms);
 }
 
-int Channel::pop_front(Message &item)
-{
+int Channel::pop_front(Message &item) {
    return responseMessageQueue_.pop_front(item);
 }
 
-bool Channel::push_back(Message &item)
-{
+bool Channel::push_back(Message &item) {
     return responseMessageQueue_.push_back(item);
 }
 
-void Channel::onResponseMessage(Message *message)
-{
+void Channel::onResponseMessage(Message *message) {
     if (!message) {
         return;
     }
@@ -123,47 +113,35 @@ void Channel::onResponseMessage(Message *message)
     }
 }
 
-void Channel::onRequestMessage(Message *message)
-{
+void Channel::onRequestMessage(Message *message) {
     if (!message) {
         return;
     }
-    
     module_->sendMessageToBoss(message);
 }
 
-void Channel::start()
-{
+void Channel::start() {
     thread_.start(loop, this);
 }
 
-void Channel::join()
-{
+void Channel::join() {
     thread_.join();
 }
 
-void Channel::canRead()
-{
+void Channel::canRead() {
     do {
-        
         struct sockaddr_in clientAddr;
         socklen_t len = sizeof(socklen_t);
-        
         // non-blocking accept;
         int clientFd = ::accept(listener_->getListenerFd(), reinterpret_cast<struct sockaddr *>(&clientAddr), &len);
-        
         if (clientFd < 0) {
-            
             if (errno == EAGAIN || errno == EWOULDBLOCK)
                 break;
-            
             if (errno == EINTR) {
                 continue;
             }
         }
-        
         SessionType sessionID = generateSessionID();
-        
         if (sessionID == 0) {
             ::close(clientFd);
             continue;
@@ -176,24 +154,16 @@ void Channel::canRead()
         std::string ip(inet_ntoa(clientAddr.sin_addr));
         
         std::cout << ip << ":" << port << std::endl;
-        
-        
-        
     } while (true);
 }
 
-void Channel::canWrite()
-{
-    
+void Channel::canWrite() {
 }
 
-void Channel::receiveMsg(Message *message)
-{
-    
+void Channel::receiveMsg(Message *message) {
 }
 
-void *Channel::loop(void *para)
-{
+void *Channel::loop(void *para) {
     Channel *channel = reinterpret_cast<Channel *>(para);
     
     if (!channel) {
@@ -214,8 +184,7 @@ void *Channel::loop(void *para)
     return channel;
 }
 
-TcpConnection *Channel::getConnection(SessionType sessionID)
-{
+TcpConnection *Channel::getConnection(SessionType sessionID) {
     TcpConnection *connection = nullptr;
     int hole = SessionIDDispatcher::getAutoIncrementID(sessionID);
     if (hole >= 0 || hole < MAX_CONNECTIONS) {
@@ -224,22 +193,17 @@ TcpConnection *Channel::getConnection(SessionType sessionID)
     return connection;
 }
 
-bool Channel::sendMessageToBoss(Message *message)
-{
+bool Channel::sendMessageToBoss(Message *message) {
     return module_->sendMessageToBoss(message);
 }
 
-
-void Channel::init(IOModule *module, int channelID)
-{
+void Channel::init(IOModule *module, int channelID) {
     module_ = module;
     poller_  = Poller::createPoller();
     poller_->addFd(listener_->getListenerFd(), static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN), this);
-    
     for (auto i = 0; i < MAX_CONNECTIONS; ++i) {
         std::shared_ptr<TcpConnection> connection = std::make_shared<TcpConnection>(poller_.get());
         connections_.push_back(connection);
     }
-    
     setChannelID(channelID);
 }

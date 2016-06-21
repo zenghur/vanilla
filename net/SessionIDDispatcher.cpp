@@ -6,11 +6,10 @@
 #include <cassert>
 #include <cmath>
 
-using namespace vanilla;
+using vanilla::SessionIDDispatcher;
 
 // 24 + 8 + 32
-SessionIDDispatcher::SessionType SessionIDDispatcher::getSessionId(int serverID, int channelID, int autoIncrementIndex)
-{
+SessionIDDispatcher::SessionType SessionIDDispatcher::getSessionId(int serverID, int channelID, int autoIncrementIndex) {
     SessionType s(iniValue);
     SessionType c(iniValue);
     SessionType a(iniValue);
@@ -22,19 +21,16 @@ SessionIDDispatcher::SessionType SessionIDDispatcher::getSessionId(int serverID,
     return s | c | a;
 }
 
-SessionIDDispatcher::ID SessionIDDispatcher::getServerID(SessionType num)
-{
+SessionIDDispatcher::ID SessionIDDispatcher::getServerID(SessionType num) {
     return num >> (autoIncrementBits + channelBits);
 }
 
-SessionIDDispatcher::ID SessionIDDispatcher::getChannelID(SessionType num)
-{
+SessionIDDispatcher::ID SessionIDDispatcher::getChannelID(SessionType num) {
     num >>= (autoIncrementBits);
     return static_cast<uint8_t>(num);
 }
 
-SessionIDDispatcher::ID SessionIDDispatcher::getAutoIncrementID(SessionType num)
-{
+SessionIDDispatcher::ID SessionIDDispatcher::getAutoIncrementID(SessionType num) {
     return static_cast<ID>(num);
 }
 

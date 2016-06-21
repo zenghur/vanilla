@@ -1,15 +1,15 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef IgnoreSigPipe_h
-#define IgnoreSigPipe_h
+#ifndef NET_IGNORESIGPIPE_H_
+#define NET_IGNORESIGPIPE_H_
 
 namespace vanilla {
 
 class IgnoreSigPipe {
-public:
+ public:
     IgnoreSigPipe();
 };
     
-}
+}  // namespace vanilla
 
-#endif /* IgnoreSigPipe_h */
+#endif  // NET_IGNORESIGPIPE_H_

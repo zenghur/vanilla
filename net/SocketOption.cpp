@@ -1,12 +1,12 @@
 // Copyright (c) 2016 zenghur
 
 #include "SocketOption.h"
+
 #include "Error.h"
 
-using namespace vanilla;
+using vanilla::SocketOption;
 
-int SocketOption::setReuseAddr(int fd)
-{
+int SocketOption::setReuseAddr(int fd) {
     int optval = 1;
     int flag = setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     if (flag < 0) {
@@ -15,8 +15,7 @@ int SocketOption::setReuseAddr(int fd)
     return flag;
 }
 
-int SocketOption::setSndBuf(int fd, int size)
-{
+int SocketOption::setSndBuf(int fd, int size) {
     int flag = setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &size, sizeof(size));
     if (flag < 0) {
         printError();
@@ -24,8 +23,7 @@ int SocketOption::setSndBuf(int fd, int size)
     return flag;
 }
 
-int SocketOption::setRcvBuf(int fd, int size)
-{
+int SocketOption::setRcvBuf(int fd, int size) {
     int flag = setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &size, sizeof(size));
     if (flag < 0) {
         printError();
@@ -33,8 +31,7 @@ int SocketOption::setRcvBuf(int fd, int size)
     return flag;
 }
 
-int SocketOption::getSndBuf(int fd)
-{
+int SocketOption::getSndBuf(int fd) {
     int optval;
     socklen_t len = sizeof(optval);
     int flag = getsockopt(fd, SOL_SOCKET, SO_SNDBUF, &optval, &len);
@@ -44,8 +41,7 @@ int SocketOption::getSndBuf(int fd)
     return optval;
 }
 
-int SocketOption::getRcvBuf(int fd)
-{
+int SocketOption::getRcvBuf(int fd) {
     int optval;
     socklen_t len = sizeof(optval);
     int flag = getsockopt(fd, SOL_SOCKET, SO_RCVBUF, &optval, &len);
@@ -55,8 +51,7 @@ int SocketOption::getRcvBuf(int fd)
     return optval;
 }
 
-int SocketOption::setSndTimeO(int fd, struct timeval val)
-{
+int SocketOption::setSndTimeO(int fd, struct timeval val) {
     int flag = setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, static_cast<const struct timeval *>(&val), sizeof(val));
     if (flag < 0) {
         printError();
@@ -64,8 +59,7 @@ int SocketOption::setSndTimeO(int fd, struct timeval val)
     return flag;
 }
 
-int SocketOption::setRcvTimeO(int fd, struct timeval val)
-{
+int SocketOption::setRcvTimeO(int fd, struct timeval val) {
     int flag = setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, static_cast<const struct timeval *>(&val), sizeof(val));
     if (flag < 0) {
         printError();
@@ -73,8 +67,7 @@ int SocketOption::setRcvTimeO(int fd, struct timeval val)
     return flag;
 }
 
-struct timeval SocketOption::getSndTimeO(int fd)
-{
+struct timeval SocketOption::getSndTimeO(int fd) {
     struct timeval val;
     socklen_t len;
     int flag = getsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, static_cast<struct timeval *>(&val), &len);
@@ -84,8 +77,7 @@ struct timeval SocketOption::getSndTimeO(int fd)
     return val;
 }
 
-struct timeval SocketOption::getRcvTimeO(int fd)
-{
+struct timeval SocketOption::getRcvTimeO(int fd) {
     struct timeval val;
     socklen_t len;
     int flag = getsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, static_cast<struct timeval *>(&val), &len);

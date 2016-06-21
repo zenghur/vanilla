@@ -1,7 +1,6 @@
 // Copyright (c) 2016 zenghur
 
 #include <memory>
-#include <string>
 
 #include "IOModule.h"
 #include "TcpListener.h"
