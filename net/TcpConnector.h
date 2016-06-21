@@ -5,22 +5,28 @@
 
 #include "TcpSocket.h"
 #include "IOEvent.h"
+#include "SessionIDDispatcher.h"
 
 namespace vanilla {
-    
+class Poller;
 class TcpConnector : public IOEvent {
  public:
+    explicit TcpConnector(Poller *poller);
+    void init(Channel *channel, int fd, SessionIDDispatcher::SessionType sessionID);
     virtual void canRead();
     virtual void canWrite();
-    virtual void receiveMsg();
+    virtual void receiveMsg(Message *message);
     void connect(std::string peerName, uint16_t port);
     int getConnectorFd();
-    
+  
  private:
     TcpConnector(const TcpConnector &) = delete;
     TcpConnector& operator = (const TcpConnector&) = delete;
     
  private:
+    Poller *poller_;
+    Channel *channel_;
+    SessionIDDispatcher::SessionType sessionID_;
     std::shared_ptr<TcpSocket> socket_;
 };
   

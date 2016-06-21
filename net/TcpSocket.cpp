@@ -115,18 +115,45 @@ std::shared_ptr<TcpSocket> TcpSocket::createListener(std::string ip, uint16_t po
 }
 
 std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint16_t port) {
-    int fd = socket(PF_INET, SOCK_STREAM, 0);
-    if (fd < 0) {
-        printError();
+  int fd = socket(PF_INET, SOCK_STREAM, 0);
+  if (fd < 0) {
+      printError();
+  }
+
+  makeNonBlock(fd);
+
+  struct sockaddr_in peerAddr;
+  memset(&peerAddr, 0, sizeof(peerAddr));
+  peerAddr.sin_family = AF_INET;
+  peerAddr.sin_port = htobe16(port);
+  
+  int flag = inet_pton(AF_INET, peerName.c_str(), &peerAddr.sin_addr.s_addr);
+  if (flag == 0) {
+    struct hostent *entry;
+    entry = gethostbyname(peerName.c_str());
+    if (entry) {
+      memcpy(&peerAddr.sin_addr.s_addr, entry->h_addr_list[0], entry->h_length);
     }
-    
-    makeNonBlock(fd);
-    
-    
-    std::shared_ptr<TcpSocket> socket = std::make_shared<TcpSocket>(fd);
+  }
+  
+  bool isConnect = false;
+  if (connect(fd, reinterpret_cast<struct sockaddr *>(&peerAddr), sizeof(peerAddr)) < 0) {
+    if (errno  != EINPROGRESS) {
+      ::close(fd);
+      fd = -1;
+    }
+  } else {
+    isConnect = true;
+  }
+  
+  
+  std::shared_ptr<TcpSocket> socket = std::make_shared<TcpSocket>(fd);
+  
+  if (isConnect) {
     socket->setNonBlockStatus(true);
-    
-    return socket;
+  }
+
+  return socket;
 }
 
 int TcpSocket::nonBlockSend(char *data, size_t len) {
