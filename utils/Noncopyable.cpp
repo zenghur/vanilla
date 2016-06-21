@@ -2,16 +2,12 @@
 
 #include "Noncopyable.h"
 
-using namespace vanilla;
+using vanilla::Noncopyable;
 
-Noncopyable::Noncopyable()
-{
-    
+Noncopyable::Noncopyable() {
 }
 
-Noncopyable::~Noncopyable()
-{
-    
+Noncopyable::~Noncopyable() {
 }
 
 

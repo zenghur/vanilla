@@ -4,31 +4,20 @@
 
 #include <iostream>
 
+using vanilla::Mutex;
 
-using namespace vanilla;
-
-Mutex::Mutex()
-{
-    if (pthread_mutex_init(&mutex_, NULL)) {
-        std::runtime_error("cannot initialize mutex.");
-    }
+Mutex::Mutex() {
+  pthread_mutex_init(&mutex_, NULL);
 }
 
-Mutex::~Mutex()
-{
-    pthread_mutex_destroy(&mutex_);
+Mutex::~Mutex() {
+  pthread_mutex_destroy(&mutex_);
 }
 
-void Mutex::lock()
-{
-    if (pthread_mutex_lock(&mutex_)) {
-        // log
-    }
+void Mutex::lock() {
+  pthread_mutex_lock(&mutex_);
 }
 
-void Mutex::unLock()
-{
-    if (pthread_mutex_unlock(&mutex_)) {
-        // log
-    }
+void Mutex::unLock() {
+  pthread_mutex_unlock(&mutex_);
 }

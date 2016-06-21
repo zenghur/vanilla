@@ -1,23 +1,17 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef __Vanilla__DateTime__
-#define __Vanilla__DateTime__
-
+#ifndef UTILS_DATETIME_H_
+#define UTILS_DATETIME_H_
 
 #include <time.h>
 #include <sys/time.h>
 
-
 namespace vanilla {
-
 class DateTime {
-public:
-    
-    static struct timespec msToTimespec(int ms);
-    static struct timeval msToTimeval(int ms);
-    
+ public:
+  static struct timespec msToTimespec(int ms);
+  static struct timeval msToTimeval(int ms);
 };
-    
-}
+}  // namespace vanilla
 
-#endif /* defined(__Vanilla__DateTime__) */
+#endif  // UTILS_DATETIME_H_

@@ -1,22 +1,21 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef MutexLockGuard_hpp
-#define MutexLockGuard_hpp
+#ifndef UTILS_MUTEXLOCKGUARD_H_
+#define UTILS_MUTEXLOCKGUARD_H_
 
-#include "Noncopyable.h"
 #include "Mutex.h"
 
 namespace vanilla {
-
-class MutexLockGuard : private vanilla::Noncopyable {
-public:
+class MutexLockGuard {
+ public:
     explicit MutexLockGuard(Mutex &m);
     ~MutexLockGuard();
-private:
+  
+ private:
+    MutexLockGuard(const MutexLockGuard &) = delete;
+    MutexLockGuard& operator = (const MutexLockGuard &) = delete;
     Mutex &mutex_;
 };
-    
-    
-}
+}  // namespace vanilla
 
-#endif /* MutexLockGuard_hpp */
+#endif  // UTILS_MUTEXLOCKGUARD_H_

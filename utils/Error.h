@@ -1,17 +1,14 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef Error_hpp
-#define Error_hpp
+#ifndef  UTILS_ERROR_H_
+#define  UTILS_ERROR_H_
 
 #include <stdio.h>
-#include <string>
 
 #include <string>
 
 namespace vanilla {
-
 void printError(std::string reason = "");
-    
-}
+}  // namespace vanilla
 
-#endif /* Error_hpp */
+#endif  // UTILS_ERROR_H_

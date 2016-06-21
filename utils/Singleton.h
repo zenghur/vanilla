@@ -1,42 +1,34 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef Singleton_h
-#define Singleton_h
-
-#include "Noncopyable.h"
+#ifndef UTILS_SINGLETON_H_
+#define UTILS_SINGLETON_H_
 
 namespace vanilla {
-    
 template <typename T>
-class Singleton : private vanilla::Noncopyable {
-public:
+class Singleton {
+ public:
     static T &getInstance();
-private:
+  
+ private:
     Singleton();
     ~Singleton();
 };
 
 template <typename T>
-T &Singleton<T>::getInstance()
-{
+T &Singleton<T>::getInstance() {
     static T instance;
     return instance;
 }
 
 template <typename T>
-Singleton<T>::Singleton()
-{
-    
+Singleton<T>::Singleton() {
 }
 
 template <typename T>
-Singleton<T>::~Singleton()
-{
-    
+Singleton<T>::~Singleton() {
 }
-    
-}
+}  // namespace vanilla
 
 
-#endif /* Singleton_h */
+#endif  // UTILS_SINGLETON_H_
 

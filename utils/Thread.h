@@ -1,20 +1,14 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef THREAD_H
-#define THREAD_H
+#ifndef UTILS_THREAD_H_
+#define UTILS_THREAD_H_
 
 #include <pthread.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-
-
-#include "Noncopyable.h"
-
 namespace vanilla {
-    
-    
-class Thread : private vanilla::Noncopyable {
+class Thread {
  public:
     typedef void *(*ThreadStartFun)(void *);
     Thread();
@@ -25,16 +19,15 @@ class Thread : private vanilla::Noncopyable {
     void exit();
     pthread_t getId();
     void cancel();
-    ~Thread();
   
  private:
+    Thread(const Thread &) = delete;
+    Thread& operator = (const Thread &) = delete;
     bool joinable_;
     bool detached_;
     pthread_t handle_;
-    
 };
-    
-}
+}  // namespace vanilla
 
 
-#endif
+#endif  // UTILS_THREAD_H_

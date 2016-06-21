@@ -1,19 +1,18 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef Noncopyable_h
-#define Noncopyable_h
+#ifndef UTILS_NONCOPYABLE_H_
+#define UTILS_NONCOPYABLE_H_
 
 namespace vanilla {
-
 class Noncopyable {
-private:
+ private:
     Noncopyable(const Noncopyable &);
     const Noncopyable &operator =(const Noncopyable &);
-protected:
+  
+ protected:
     Noncopyable();
     ~Noncopyable();
 };
-    
-}
+}  // namespace vanilla
 
-#endif /* Noncopyable_h */
+#endif  // UTILS_NONCOPYABLE_H_

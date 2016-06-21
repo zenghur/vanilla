@@ -2,14 +2,12 @@
 
 #include "MutexLockGuard.h"
 
-using namespace vanilla;
+using vanilla::MutexLockGuard;
 
-MutexLockGuard::MutexLockGuard(Mutex &m): mutex_(m)
-{
+MutexLockGuard::MutexLockGuard(Mutex &m): mutex_(m) {
     mutex_.lock();
 }
 
-MutexLockGuard::~MutexLockGuard()
-{
+MutexLockGuard::~MutexLockGuard() {
     mutex_.unLock();
 }

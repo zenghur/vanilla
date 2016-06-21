@@ -1,34 +1,27 @@
 // Copyright (c) 2016 zenghur
 
-#ifndef Mutex_hpp
-#define Mutex_hpp
-
-#include "Noncopyable.h"
+#ifndef UTILS_MUTEX_H_
+#define UTILS_MUTEX_H_
 
 #include <pthread.h>
 #include <unistd.h>
 
 // 思路 RAII
 // mutex is a resource
-// pthread_mutex_init & pthread_mutex_destroy
 
 namespace vanilla {
-    
 class Mutex {
-public:
+ public:
     Mutex();
     ~Mutex();
     void lock();
     void unLock();
     
-private:
+ private:
     Mutex(const Mutex &) = delete;
     Mutex & operator = (const Mutex &) = delete;
     pthread_mutex_t mutex_;
 };
-    
-}
+}  // namespace vanilla
 
-
-
-#endif /* Mutex_hpp */
+#endif  // UTILS_MUTEX_H_
