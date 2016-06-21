@@ -138,21 +138,15 @@ std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint
   
   bool isConnect = false;
   if (connect(fd, reinterpret_cast<struct sockaddr *>(&peerAddr), sizeof(peerAddr)) < 0) {
-    if (errno  != EINPROGRESS) {
       ::close(fd);
       fd = -1;
-    }
   } else {
     isConnect = true;
   }
-  
-  
   std::shared_ptr<TcpSocket> socket = std::make_shared<TcpSocket>(fd);
-  
   if (isConnect) {
     socket->setNonBlockStatus(true);
   }
-
   return socket;
 }
 

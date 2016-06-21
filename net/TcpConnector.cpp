@@ -16,10 +16,6 @@ TcpConnector::TcpConnector(Poller *poller) : poller_(poller),
                                              socket_(nullptr) {
 }
 
-void TcpConnector::init(Channel *channel, int fd, SessionIDDispatcher::SessionType sessionID) {
-
-}
-
 void TcpConnector::canRead() {
 }
 

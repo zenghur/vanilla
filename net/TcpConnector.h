@@ -12,7 +12,6 @@ class Poller;
 class TcpConnector : public IOEvent {
  public:
     explicit TcpConnector(Poller *poller);
-    void init(Channel *channel, int fd, SessionIDDispatcher::SessionType sessionID);
     virtual void canRead();
     virtual void canWrite();
     virtual void receiveMsg(Message *message);
