@@ -34,8 +34,7 @@ void TcpConnection::closeConnection() {
   socket_->close();
 }
 
-Poller *TcpConnection::getPoller()
-{
+Poller *TcpConnection::getPoller() {
   return poller_;
 }
 

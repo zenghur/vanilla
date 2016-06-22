@@ -258,13 +258,11 @@ int TcpSocket::send(char *data, int len) {
         if (ret == -1) {
           break;
         }
-        connection_->getPoller()->modFd(sockfd_, static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN) | static_cast<Poller::PollerEventType>(PollerEvent::POLLER_OUT), connection_);
       } else {
         ret = nonBlockSend(data, len);
         if (ret == -1) {
           break;
         }
-        
         if (ret < len) {
           ret = putResponseDataInBuf(data + ret, len - ret);
           if (ret == -1) {
@@ -273,6 +271,9 @@ int TcpSocket::send(char *data, int len) {
         }
       }
   } while (false);
+  if (sendLen_ > 0) {
+     connection_->getPoller()->modFd(sockfd_, static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN) | static_cast<Poller::PollerEventType>(PollerEvent::POLLER_OUT), connection_);
+  }
   return ret;
 }
 
@@ -297,7 +298,9 @@ int TcpSocket::sendBuf() {
       break;
     }
   }
-
+  if (sendLen_ == 0) {
+    connection_->getPoller()->modFd(sockfd_, static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN), connection_);
+  }
   return 0;
 }
 
