@@ -11,10 +11,13 @@ namespace vanilla {
     
 class TcpListener {
  public:
+   TcpListener() = default;
    int getListenerFd();
    void listen(std::string ip, uint16_t port);
   
  private:
+   TcpListener(const TcpListener &) = delete;
+   TcpListener& operator = (const TcpListener &) = delete;
    std::shared_ptr<TcpSocket> socket_;
 };
 } // namespace vanilla

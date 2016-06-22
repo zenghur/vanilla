@@ -21,7 +21,6 @@ class IOModule;
     
 class Channel : public IOEvent {
  public:
-   typedef uint64_t SessionType;
    explicit Channel(TcpListener *listener = nullptr);
    void init(IOModule *module, int channelID);
    int getListenerFd();
@@ -30,14 +29,14 @@ class Channel : public IOEvent {
    void start();
    void join();
    static void *loop(void *para);
-   TcpConnection *getConnection(SessionType sessionID);
+   TcpConnection *getConnection(SessionIDDispatcher::SessionType sessionID);
    bool sendMessageToBoss(Message *message);
   
  public:
    virtual void canRead();  // 接受连接请求
    virtual void canWrite();
    virtual void receiveMsg(Message *message);
-   SessionType generateSessionID();
+   SessionIDDispatcher::SessionType generateSessionID();
    void sleep(int ms);
    bool isProcessing();
    void setProcessing(bool flag);

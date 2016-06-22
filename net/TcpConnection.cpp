@@ -8,14 +8,15 @@
 #include "Channel.h"
 
 using vanilla::TcpConnection;
+using vanilla::SessionIDDispatcher;
 
 TcpConnection::TcpConnection(Poller *poller): socket_(nullptr),
                                               poller_(poller),
                                               channel_(nullptr),
-                                              sessionID_(-1) {
+                                              sessionID_(0) {
 }
 
-uint64_t TcpConnection::getSessionID() {
+SessionIDDispatcher::SessionType TcpConnection::getSessionID() {
   return sessionID_;
 }
 
@@ -31,7 +32,7 @@ void TcpConnection::closeConnection() {
   socket_->close();
 }
 
-void TcpConnection::init(Channel *channel, int fd, uint64_t sessionID) {
+void TcpConnection::init(Channel *channel, int fd, SessionIDDispatcher::SessionType sessionID) {
   assert(poller_);
   channel_ = channel;
 

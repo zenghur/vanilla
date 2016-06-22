@@ -107,7 +107,7 @@ std::shared_ptr<TcpSocket> TcpSocket::createListener(std::string ip, uint16_t po
     printError();
   }
 
-  std::shared_ptr<TcpSocket> socket(new TcpSocket(fd));
+  std::shared_ptr<TcpSocket> socket = std::make_shared<TcpSocket>(fd);
   socket->setNonBlockStatus(true);
 
   return std::move(socket);

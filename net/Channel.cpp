@@ -20,11 +20,12 @@
 
 using vanilla::Channel;
 using vanilla::TcpConnection;
+using vanilla::SessionIDDispatcher;
 
-Channel::Channel(TcpListener *listener): poller_(nullptr),
-                                         listener_(listener),
+Channel::Channel(TcpListener *listener): listener_(listener),
                                          module_(nullptr),
                                          processing_(false),
+                                         channelID_(0),
                                          currentConnectionIdx_(0),
                                          currentConnectionsCount_(0) {
 }
@@ -41,7 +42,7 @@ void Channel::setChannelID(int channelID) {
   channelID_ = channelID;
 }
 
-vanilla::Channel::SessionType Channel::generateSessionID() {
+SessionIDDispatcher::SessionType Channel::generateSessionID() {
   if (currentConnectionsCount_ >= MAX_CONNECTIONS) {
     return 0;
   }
@@ -52,7 +53,7 @@ vanilla::Channel::SessionType Channel::generateSessionID() {
     if (connections_[hole]->getConnectionFd() == -1) {
       currentConnectionIdx_  =  hole;
       ++currentConnectionsCount_;
-      SessionType sessionID = SessionIDDispatcher::getSessionId(1, getChannelID(), hole);
+      SessionIDDispatcher::SessionType sessionID = SessionIDDispatcher::getSessionId(1, getChannelID(), hole);
       return sessionID;
     }
   }
@@ -68,6 +69,7 @@ void Channel::setProcessing(bool flag) {
   Message item;
   item.type_ = vanilla::MessageType::TIMER_MSG;
   item.sessionID_ = 0;
+  item.data_ = nullptr;
   item.size_ = 0;
   responseMessageQueue_.push_back(item);
 }
@@ -140,7 +142,7 @@ void Channel::canRead() {
         continue;
       }
     }
-    SessionType sessionID = generateSessionID();
+    SessionIDDispatcher::SessionType sessionID = generateSessionID();
     if (sessionID == 0) {
       ::close(clientFd);
       continue;
@@ -178,7 +180,7 @@ void *Channel::loop(void *para) {
   return channel;
 }
 
-TcpConnection *Channel::getConnection(SessionType sessionID) {
+TcpConnection *Channel::getConnection(SessionIDDispatcher::SessionType sessionID) {
   TcpConnection *connection = nullptr;
   int hole = SessionIDDispatcher::getAutoIncrementID(sessionID);
   if (hole >= 0 || hole < MAX_CONNECTIONS) {

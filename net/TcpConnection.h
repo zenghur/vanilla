@@ -6,18 +6,19 @@
 #include "IOEvent.h"
 #include "TcpSocket.h"
 #include "Poller.h"
+#include "SessionIDDispatcher.h"
 
 namespace vanilla {
     
 class Channel;
 class Message;
-    
+  
 class TcpConnection : public IOEvent {
  public:
    explicit TcpConnection(Poller *poller);
-   void init(Channel *channel, int fd, uint64_t sessionID);
+   void init(Channel *channel, int fd, SessionIDDispatcher::SessionType sessionID);
    int getConnectionFd();
-   uint64_t getSessionID();
+   SessionIDDispatcher::SessionType getSessionID();
    void closeConnection();
   
  public:
@@ -30,7 +31,7 @@ class TcpConnection : public IOEvent {
    Poller *poller_;
    Channel *channel_;
    std::shared_ptr<TcpSocket> socket_;
-   uint64_t sessionID_;
+   SessionIDDispatcher::SessionType sessionID_;
 };
     
 }  // namespace vanilla

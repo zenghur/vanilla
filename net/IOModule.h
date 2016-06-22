@@ -23,7 +23,7 @@ class IOModule {
   
  private:
    IOModule(const IOModule &) = delete;
-   IOModule& operator =(const IOModule &) = delete;
+   IOModule& operator = (const IOModule &) = delete;
    std::shared_ptr<TcpListener> listener_;
    std::vector<std::shared_ptr<Channel> > channels_;
    std::shared_ptr<Boss> boss_;
