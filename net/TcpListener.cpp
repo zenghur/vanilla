@@ -17,11 +17,11 @@
 using vanilla::TcpListener;
 
 int TcpListener::getListenerFd() {
-    assert(socket_);
-    return socket_->getSocketFd();
+  assert(socket_);
+  return socket_->getSocketFd();
 }
 
 void TcpListener::listen(std::string ip, uint16_t port) {
-    socket_ = TcpSocket::createListener(ip, port);
+  socket_ = TcpSocket::createListener(ip, port);
 }
 

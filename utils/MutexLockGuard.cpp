@@ -5,9 +5,9 @@
 using vanilla::MutexLockGuard;
 
 MutexLockGuard::MutexLockGuard(Mutex &m): mutex_(m) {
-    mutex_.lock();
+  mutex_.lock();
 }
 
 MutexLockGuard::~MutexLockGuard() {
-    mutex_.unLock();
+  mutex_.unLock();
 }

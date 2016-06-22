@@ -10,11 +10,11 @@
 
 namespace vanilla {
 struct Message {
-    Message();
-    int type_;
-    SessionIDDispatcher::SessionType sessionID_;
-    char* data_;
-    int size_;
+  Message();
+  int type_;
+  SessionIDDispatcher::SessionType sessionID_;
+  char* data_;
+  int size_;
 };
 }  // namespace vanilla
 

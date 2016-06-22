@@ -16,20 +16,20 @@ class Channel;
     
 class IOModule {
  public:
-    IOModule() = default;
-    void init(std::string ip, uint16_t port);
-    void start();
-    bool sendMessageToBoss(Message *message);
+   IOModule() = default;
+   void init(std::string ip, uint16_t port);
+   void start();
+   bool sendMessageToBoss(Message *message);
   
  private:
-    IOModule(const IOModule &) = delete;
-    IOModule& operator =(const IOModule &) = delete;
-    std::shared_ptr<TcpListener> listener_;
-    std::vector<std::shared_ptr<Channel> > channels_;
-    std::shared_ptr<Boss> boss_;
+   IOModule(const IOModule &) = delete;
+   IOModule& operator =(const IOModule &) = delete;
+   std::shared_ptr<TcpListener> listener_;
+   std::vector<std::shared_ptr<Channel> > channels_;
+   std::shared_ptr<Boss> boss_;
   
  private:
-    static const int NUM_OF_POLLERS = 2;
+   static const int NUM_OF_POLLERS = 2;
 };
 }  // namespace vanilla
 

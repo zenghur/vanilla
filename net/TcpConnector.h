@@ -11,22 +11,22 @@ namespace vanilla {
 class Poller;
 class TcpConnector : public IOEvent {
  public:
-    explicit TcpConnector(Poller *poller);
-    virtual void canRead();
-    virtual void canWrite();
-    virtual void receiveMsg(Message *message);
-    void connect(std::string peerName, uint16_t port);
-    int getConnectorFd();
+   explicit TcpConnector(Poller *poller);
+   virtual void canRead();
+   virtual void canWrite();
+   virtual void receiveMsg(Message *message);
+   void connect(std::string peerName, uint16_t port);
+   int getConnectorFd();
   
  private:
-    TcpConnector(const TcpConnector &) = delete;
-    TcpConnector& operator = (const TcpConnector&) = delete;
-    
+   TcpConnector(const TcpConnector &) = delete;
+   TcpConnector& operator = (const TcpConnector&) = delete;
+  
  private:
-    Poller *poller_;
-    Channel *channel_;
-    SessionIDDispatcher::SessionType sessionID_;
-    std::shared_ptr<TcpSocket> socket_;
+   Poller *poller_;
+   Channel *channel_;
+   SessionIDDispatcher::SessionType sessionID_;
+   std::shared_ptr<TcpSocket> socket_;
 };
   
 }  // namespace vanilla

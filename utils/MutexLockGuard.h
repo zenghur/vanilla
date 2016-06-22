@@ -8,13 +8,13 @@
 namespace vanilla {
 class MutexLockGuard {
  public:
-    explicit MutexLockGuard(Mutex &m);
-    ~MutexLockGuard();
+   explicit MutexLockGuard(Mutex &m);
+   ~MutexLockGuard();
   
  private:
-    MutexLockGuard(const MutexLockGuard &) = delete;
-    MutexLockGuard& operator = (const MutexLockGuard &) = delete;
-    Mutex &mutex_;
+   MutexLockGuard(const MutexLockGuard &) = delete;
+   MutexLockGuard& operator = (const MutexLockGuard &) = delete;
+   Mutex &mutex_;
 };
 }  // namespace vanilla
 

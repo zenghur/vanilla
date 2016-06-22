@@ -7,7 +7,7 @@ namespace vanilla {
 
 class IgnoreSigPipe {
  public:
-    IgnoreSigPipe();
+   IgnoreSigPipe();
 };
     
 }  // namespace vanilla

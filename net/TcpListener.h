@@ -11,11 +11,11 @@ namespace vanilla {
     
 class TcpListener {
  public:
-    int getListenerFd();
-    void listen(std::string ip, uint16_t port);
-    
+   int getListenerFd();
+   void listen(std::string ip, uint16_t port);
+  
  private:
-    std::shared_ptr<TcpSocket> socket_;
+   std::shared_ptr<TcpSocket> socket_;
 };
 } // namespace vanilla
 

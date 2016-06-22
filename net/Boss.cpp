@@ -8,46 +8,46 @@ Boss::Boss() : processing_(false) {
 }
 
 void *Boss::loop(void *para) {
-    Boss *boss = reinterpret_cast<Boss*>(para);
-    if (!boss) {
-        return nullptr;
+  Boss *boss = reinterpret_cast<Boss*>(para);
+  if (!boss) {
+      return nullptr;
+  }
+  boss->setProcessing(true);
+  while (boss->isProcessing()) {
+    Message item;
+    if (boss->pop_front(&item) == -1) {
+        boss->sleep(20);
+        continue;
     }
-    boss->setProcessing(true);
-    while (boss->isProcessing()) {
-        Message item;
-        if (boss->pop_front(&item) == -1) {
-            boss->sleep(20);
-            continue;
-        }
-        delete [] item.data_;
-    }
-    return boss;
+    delete [] item.data_;
+  }
+  return boss;
 }
 
 void Boss::start() {
-    thread_.start(Boss::loop, this);
+  thread_.start(Boss::loop, this);
 }
 
 void Boss::join() {
-    thread_.join();
+  thread_.join();
 }
 
 bool Boss::isProcessing() {
-    return processing_;
+  return processing_;
 }
 
 void Boss::setProcessing(bool flag) {
-    processing_ = flag;
+  processing_ = flag;
 }
 
 int Boss::pop_front(Message *item) {
-    return requestMessageQueue_.pop_front(*item);
+  return requestMessageQueue_.pop_front(*item);
 }
 
 bool Boss::push_back(Message *item) {
-    return requestMessageQueue_.push_back(*item);
+  return requestMessageQueue_.push_back(*item);
 }
 
 void Boss::sleep(int ms) {
-    thread_.sleep(ms);
+  thread_.sleep(ms);
 }

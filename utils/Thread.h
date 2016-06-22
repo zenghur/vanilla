@@ -10,22 +10,22 @@
 namespace vanilla {
 class Thread {
  public:
-    typedef void *(*ThreadStartFun)(void *);
-    Thread();
-    void sleep(int ms);
-    void start(ThreadStartFun fun, void *para);
-    void join();
-    void detach();
-    void exit();
-    pthread_t getId();
-    void cancel();
+   typedef void *(*ThreadStartFun)(void *);
+   Thread();
+   void sleep(int ms);
+   void start(ThreadStartFun fun, void *para);
+   void join();
+   void detach();
+   void exit();
+   pthread_t getId();
+   void cancel();
   
  private:
-    Thread(const Thread &) = delete;
-    Thread& operator = (const Thread &) = delete;
-    bool joinable_;
-    bool detached_;
-    pthread_t handle_;
+   Thread(const Thread &) = delete;
+   Thread& operator = (const Thread &) = delete;
+   bool joinable_;
+   bool detached_;
+   pthread_t handle_;
 };
 }  // namespace vanilla
 

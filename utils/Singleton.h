@@ -7,17 +7,17 @@ namespace vanilla {
 template <typename T>
 class Singleton {
  public:
-    static T &getInstance();
+   static T &getInstance();
   
  private:
-    Singleton();
-    ~Singleton();
+   Singleton();
+   ~Singleton();
 };
 
 template <typename T>
 T &Singleton<T>::getInstance() {
-    static T instance;
-    return instance;
+  static T instance;
+  return instance;
 }
 
 template <typename T>

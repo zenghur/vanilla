@@ -11,24 +11,24 @@ namespace vanilla {
     
 class Boss {
  public:
-    Boss();
-    static void *loop(void *para);
-    void start();
-    void join();
-    bool isProcessing();
-    void setProcessing(bool flag);
-    int pop_front(Message *item);
-    bool push_back(Message *item);
-    void sleep(int ms);
+   Boss();
+   static void *loop(void *para);
+   void start();
+   void join();
+   bool isProcessing();
+   void setProcessing(bool flag);
+   int pop_front(Message *item);
+   bool push_back(Message *item);
+   void sleep(int ms);
     
  private:
-    Boss(const Boss &) = delete;
-    Boss &operator = (const Boss &) = delete;
+   Boss(const Boss &) = delete;
+   Boss &operator = (const Boss &) = delete;
     
  private:
-    bool processing_;
-    ConcurrentQueue<Message> requestMessageQueue_;
-    Thread thread_;
+   bool processing_;
+   ConcurrentQueue<Message> requestMessageQueue_;
+   Thread thread_;
 };
 }  // namespace vanilla
 

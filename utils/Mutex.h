@@ -12,15 +12,15 @@
 namespace vanilla {
 class Mutex {
  public:
-    Mutex();
-    ~Mutex();
-    void lock();
-    void unLock();
-    
+   Mutex();
+   ~Mutex();
+   void lock();
+   void unLock();
+  
  private:
-    Mutex(const Mutex &) = delete;
-    Mutex & operator = (const Mutex &) = delete;
-    pthread_mutex_t mutex_;
+   Mutex(const Mutex &) = delete;
+   Mutex & operator = (const Mutex &) = delete;
+   pthread_mutex_t mutex_;
 };
 }  // namespace vanilla
 

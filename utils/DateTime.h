@@ -9,8 +9,8 @@
 namespace vanilla {
 class DateTime {
  public:
-  static struct timespec msToTimespec(int ms);
-  static struct timeval msToTimeval(int ms);
+   static struct timespec msToTimespec(int ms);
+   static struct timeval msToTimeval(int ms);
 };
 }  // namespace vanilla
 

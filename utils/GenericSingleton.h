@@ -16,19 +16,19 @@ namespace vanilla {
 template <typename T>
 class GenericSingleton {
  public:
-    static T &getInstance();
+  static T &getInstance();
   
  private:
-    GenericSingleton() = default;
-    ~GenericSingleton() = default;
-    GenericSingleton(const GenericSingleton &) = delete;
-    GenericSingleton& operator =(const GenericSingleton &) = delete;
+   GenericSingleton() = default;
+   ~GenericSingleton() = default;
+   GenericSingleton(const GenericSingleton &) = delete;
+   GenericSingleton& operator =(const GenericSingleton &) = delete;
   
  private:
-    static void init();
-    static void destroy();
-    static pthread_once_t control_;
-    static T *instance_;
+   static void init();
+   static void destroy();
+   static pthread_once_t control_;
+   static T *instance_;
 };
   
 template <typename T>
@@ -39,22 +39,22 @@ pthread_once_t GenericSingleton<T>::control_ = PTHREAD_ONCE_INIT;
     
 template <typename T>
 T &GenericSingleton<T>::getInstance() {
-    pthread_once(&control_, &GenericSingleton<T>::init);
-    return *instance_;
+  pthread_once(&control_, &GenericSingleton<T>::init);
+  return *instance_;
 }
 
 template <typename T>
 void GenericSingleton<T>::init() {
-    instance_ = new T();
-    atexit(&GenericSingleton<T>::destroy);
+  instance_ = new T();
+  atexit(&GenericSingleton<T>::destroy);
 }
   
 template <typename T>
 void GenericSingleton<T>::destroy() {
-    if (instance_) {
-        delete instance_;
-        instance_ = NULL;
-    }
+  if (instance_) {
+    delete instance_;
+    instance_ = NULL;
+  }
 }
 }  // namespace vanilla
 

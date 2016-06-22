@@ -10,7 +10,7 @@ using vanilla::IgnoreSigPipe;
 using vanilla::GenericSingleton;
 
 IgnoreSigPipe::IgnoreSigPipe() {
-    ::signal(SIGPIPE, SIG_IGN);
+  ::signal(SIGPIPE, SIG_IGN);
 }
 
 IgnoreSigPipe &ignoreSigPipe = GenericSingleton<IgnoreSigPipe>::getInstance();
