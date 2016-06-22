@@ -177,12 +177,13 @@ int TcpSocket::nonBlockRecv(char *data, size_t len) {
   ssize_t totalLen = len;
   if (len > 0) {
       ssize_t ret;
-      while ((ret == ::recv(sockfd_, data, len, 0)) != 0 && (len != 0)) {
-        if (errno == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
+      while ((ret = ::recv(sockfd_, data, len, 0)) != 0 && (len != 0)) {
+        std::cout << ret << " : bytes" << std::endl;
+        if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
           break;
-        } else if (errno == -1 && errno == EINTR) {
+        } else if (ret == -1 && errno == EINTR) {
           continue;
-        } else if (errno == -1) {
+        } else if (ret == -1) {
           return -1;
         }
         len -= ret;
@@ -219,7 +220,7 @@ int TcpSocket::blockRecv(char *data, size_t len) {
   ssize_t ret;
   ssize_t totalLen = len;
 
-  while (len != 0 && (ret == ::recv(sockfd_, data, len, 0)) != 0) {
+  while (len != 0 && (ret = ::recv(sockfd_, data, len, 0)) != 0) {
     if (ret == -1 && errno == EINTR) {
       continue;
     } else if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
@@ -341,6 +342,7 @@ int TcpSocket::recv(IOEvent *event) {
       item.type_ = NET_MSG;
       item.data_ = new char[payLoadSize_];
       item.size_ = payLoadSize_;
+      std::copy(&recvBuf_[RCV_HEADER_SIZE], &recvBuf_[RCV_HEADER_SIZE + payLoadSize_], item.data_);
       if (event) {
         event->receiveMsg(&item);
       }

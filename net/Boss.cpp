@@ -10,14 +10,14 @@ Boss::Boss() : processing_(false) {
 void *Boss::loop(void *para) {
   Boss *boss = reinterpret_cast<Boss*>(para);
   if (!boss) {
-      return nullptr;
+    return nullptr;
   }
   boss->setProcessing(true);
   while (boss->isProcessing()) {
     Message item;
     if (boss->pop_front(&item) == -1) {
-        boss->sleep(20);
-        continue;
+      boss->sleep(20);
+      continue;
     }
     delete [] item.data_;
   }
