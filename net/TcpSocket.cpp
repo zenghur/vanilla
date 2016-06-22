@@ -332,6 +332,10 @@ int TcpSocket::recv(IOEvent *event) {
     }
     
     int ret = nonBlockRecv(&recvBuf_[recvLen_], expectantBytes);
+    if (ret == 0) {
+      break;
+    }
+    
     if (ret == -1) {
       return -1;
     }

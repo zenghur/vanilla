@@ -49,7 +49,6 @@ void TcpConnection::init(Channel *channel, int fd, SessionIDDispatcher::SessionT
   sessionID_ = sessionID;
 }
 
-
 void TcpConnection::canRead() {
   int ret = socket_->recv(this);
   if (ret == -1) {
