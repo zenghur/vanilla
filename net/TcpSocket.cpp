@@ -20,10 +20,12 @@
 #include "IOEvent.h"
 #include "MessageType.h"
 #include "Message.h"
+#include "TcpConnection.h"
 
 using vanilla::TcpSocket;
 
-TcpSocket::TcpSocket(int fd): sockfd_(fd),
+TcpSocket::TcpSocket(int fd): connection_(nullptr),
+                              sockfd_(fd),
                               isNonBlocking_(false),
                               sendBuf_(SND_BUF_SIZE),
                               sendBufStartIndex_(0),
@@ -50,6 +52,10 @@ void TcpSocket::close() {
 
 int TcpSocket::getSocketFd() {
   return sockfd_;
+}
+
+void TcpSocket::setConnection(TcpConnection *connection) {
+  connection_ = connection;
 }
 
 void TcpSocket::setNonBlockStatus(bool flag) {
@@ -252,6 +258,7 @@ int TcpSocket::send(char *data, int len) {
         if (ret == -1) {
           break;
         }
+        connection_->getPoller()->modFd(sockfd_, static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN) | static_cast<Poller::PollerEventType>(PollerEvent::POLLER_OUT), connection_);
       } else {
         ret = nonBlockSend(data, len);
         if (ret == -1) {

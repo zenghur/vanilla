@@ -6,9 +6,11 @@
 
 #include "TcpSocket.h"
 #include "Channel.h"
+#include "Poller.h"
 
 using vanilla::TcpConnection;
 using vanilla::SessionIDDispatcher;
+using vanilla::Poller;
 
 TcpConnection::TcpConnection(Poller *poller): socket_(nullptr),
                                               poller_(poller),
@@ -32,15 +34,19 @@ void TcpConnection::closeConnection() {
   socket_->close();
 }
 
+Poller *TcpConnection::getPoller()
+{
+  return poller_;
+}
+
 void TcpConnection::init(Channel *channel, int fd, SessionIDDispatcher::SessionType sessionID) {
   assert(poller_);
   channel_ = channel;
-
   socket_  = std::make_shared<TcpSocket>(fd);
   TcpSocket::makeNonBlock(fd);
   socket_->setNonBlockStatus(true);
-
-  poller_->addFd(fd, static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN) | static_cast<Poller::PollerEventType>(PollerEvent::POLLER_OUT), this);
+  socket_->setConnection(this);
+  poller_->addFd(fd, static_cast<Poller::PollerEventType>(PollerEvent::POLLER_IN), this);
   sessionID_ = sessionID;
 }
 

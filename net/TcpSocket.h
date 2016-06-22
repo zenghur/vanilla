@@ -12,6 +12,7 @@ namespace vanilla {
 
 class Channel;
 class IOEvent;
+class TcpConnection;
 
 class TcpSocket {
  public:
@@ -31,6 +32,8 @@ class TcpSocket {
    int blockRecv(char *data, size_t len);
 
    int getSocketFd();
+  
+   void setConnection(TcpConnection *connection);
 
    static void makeNonBlock(int fd);
    void setNonBlockStatus(bool flag);
@@ -56,6 +59,7 @@ class TcpSocket {
    TcpSocket& operator = (const TcpSocket &) = delete;
     
  private:
+   TcpConnection *connection_;
    bool isNonBlocking_;
    int sockfd_;
   

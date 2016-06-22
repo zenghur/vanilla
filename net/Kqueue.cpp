@@ -35,13 +35,13 @@ void Kqueue::init() {
 void Kqueue::addFd(int fd, PollerEventType mask, void *udata) {
   struct kevent event;
   if (mask & static_cast<PollerEventType>(PollerEvent::POLLER_IN)) {
-    EV_SET(&event, fd, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, udata);
+    EV_SET(&event, fd, EVFILT_READ, EV_ADD, 0, 0, udata);
     if (kevent(kqfd_, &event, 1, NULL, 0, NULL) == -1) {
       printError();
     }
   }
   if (mask & static_cast<PollerEventType>(PollerEvent::POLLER_OUT)) {
-    EV_SET(&event, fd, EVFILT_WRITE, EV_ADD | EV_CLEAR, 0, 0, udata);
+    EV_SET(&event, fd, EVFILT_WRITE, EV_ADD, 0, 0, udata);
     if (kevent(kqfd_, &event, 1, NULL, 0, NULL) == -1) {
       printError();
     }
@@ -67,7 +67,7 @@ void Kqueue::deleteFd(int fd, PollerEventType mask) {
 void Kqueue::modFd(int fd, PollerEventType mask, void *udata) {
   struct kevent event;
   if (static_cast<PollerEventType>(mask) & static_cast<PollerEventType>(PollerEvent::POLLER_IN)) {
-    EV_SET(&event, fd, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, udata);
+    EV_SET(&event, fd, EVFILT_READ, EV_ADD, 0, 0, udata);
   } else {
     EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, udata);
   }
@@ -75,7 +75,7 @@ void Kqueue::modFd(int fd, PollerEventType mask, void *udata) {
     printError();
   }
   if (static_cast<PollerEventType>(mask) & static_cast<PollerEventType>(PollerEvent::POLLER_OUT)) {
-    EV_SET(&event, fd, EVFILT_WRITE, EV_ADD | EV_CLEAR, 0, 0, udata);
+    EV_SET(&event, fd, EVFILT_WRITE, EV_ADD, 0, 0, udata);
   } else {
     EV_SET(&event, fd, EVFILT_WRITE, EV_DELETE, 0, 0, udata);
   }
