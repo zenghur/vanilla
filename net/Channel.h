@@ -47,7 +47,6 @@ class Channel : public IOEvent {
   
  public:
    void onResponseMessage(Message *message);
-   void onRequestMessage(Message *message);
   
  private:
    bool processing_;

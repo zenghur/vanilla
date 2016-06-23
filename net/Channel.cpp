@@ -114,13 +114,6 @@ void Channel::onResponseMessage(Message *message) {
   }
 }
 
-void Channel::onRequestMessage(Message *message) {
-  if (!message) {
-    return;
-  }
-  module_->sendMessageToBoss(message);
-}
-
 void Channel::start() {
   thread_.start(loop, this);
 }

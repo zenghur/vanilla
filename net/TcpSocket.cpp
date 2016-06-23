@@ -348,7 +348,7 @@ int TcpSocket::recv(IOEvent *event) {
     
     if (payLoadSize_ == 0) {
       std::copy(&recvBuf_[0], &recvBuf_[RCV_HEADER_SIZE], &payLoadSize_);
-      if (payLoadSize_ > RCV_BUF_SIZE) {
+      if (payLoadSize_ + RCV_HEADER_SIZE > RCV_BUF_SIZE) {
         return -1;
       }
     } else {
@@ -356,7 +356,7 @@ int TcpSocket::recv(IOEvent *event) {
       item.type_ = NET_MSG;
       item.data_ = new char[payLoadSize_];
       item.size_ = payLoadSize_;
-      std::copy(&recvBuf_[RCV_HEADER_SIZE], &recvBuf_[RCV_HEADER_SIZE + payLoadSize_], item.data_);
+      std::copy(&recvBuf_[RCV_HEADER_SIZE], &recvBuf_[RCV_HEADER_SIZE] + payLoadSize_, item.data_);
       if (event) {
         event->receiveMsg(&item);
       }
