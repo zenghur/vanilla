@@ -14,7 +14,7 @@ class TcpConnector : public IOEvent {
    explicit TcpConnector(Poller *poller);
    virtual void canRead();
    virtual void canWrite();
-   virtual void receiveMsg(Message *message);
+   virtual void receiveMsg(Message *item);
    void connect(std::string peerName, uint16_t port);
    int getConnectorFd();
   

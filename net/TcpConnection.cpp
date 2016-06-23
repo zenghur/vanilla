@@ -63,9 +63,9 @@ void TcpConnection::canWrite() {
   }
 }
 
-void TcpConnection::receiveMsg(Message *message) {
-  message->sessionID_ = sessionID_;
-  channel_->sendMessageToBoss(message);
+void TcpConnection::receiveMsg(Message *item) {
+  item->sessionID_ = sessionID_;
+  channel_->sendMessageToBoss(item);
 }
 
 void TcpConnection::send(char *data, int len) {

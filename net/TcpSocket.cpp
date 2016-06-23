@@ -354,9 +354,9 @@ int TcpSocket::recv(IOEvent *event) {
     } else {
       Message item;
       item.type_ = NET_MSG;
-      item.data_ = new char[payLoadSize_];
+      item.data_ = std::unique_ptr<char[]>(new char[payLoadSize_]);
       item.size_ = payLoadSize_;
-      std::copy(&recvBuf_[RCV_HEADER_SIZE], &recvBuf_[RCV_HEADER_SIZE] + payLoadSize_, item.data_);
+      std::copy(&recvBuf_[RCV_HEADER_SIZE], &recvBuf_[RCV_HEADER_SIZE] + payLoadSize_, item.data_.get());
       if (event) {
         event->receiveMsg(&item);
       }

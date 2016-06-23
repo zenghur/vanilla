@@ -25,7 +25,7 @@ class TcpConnection : public IOEvent {
  public:
    virtual void canRead();
    virtual void canWrite();
-   virtual void receiveMsg(Message *message);
+   virtual void receiveMsg(Message *item);
    void send(char *data, int len);
   
  private:

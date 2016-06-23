@@ -8,12 +8,18 @@
 
 #include "SessionIDDispatcher.h"
 
+// rule of zero
+
 namespace vanilla {
 struct Message {
-  Message();
+  Message() = default;
+  Message(const Message &item) = default;
+  Message& operator = (const Message &item) = default;
+  Message(Message &&item) = default;
+  Message& operator = (Message &&item) = default;
   int type_;
   SessionIDDispatcher::SessionType sessionID_;
-  char* data_;
+  std::unique_ptr<char[]> data_;
   int size_;
 };
 }  // namespace vanilla

@@ -17,8 +17,18 @@ void IOModule::init(std::string ip, uint16_t port) {
     channel->init(this, channels_.size());
     channels_.push_back(channel);
   }
-  boss_ = std::make_shared<Boss>();
+  boss_ = std::make_shared<Boss>(this);
   start();
+}
+
+void IOModule::sendMessageToChannel(Message *item) {
+  if (!item) {
+    return;
+  }
+  int channelID = SessionIDDispatcher::getChannelID(item->sessionID_);
+  if (channelID >= 0 && channelID < channels_.size()) {
+    channels_[channelID]->push_back(*item);
+  }
 }
 
 void IOModule::start() {

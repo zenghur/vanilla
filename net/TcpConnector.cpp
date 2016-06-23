@@ -22,7 +22,7 @@ void TcpConnector::canRead() {
 void TcpConnector::canWrite() {
 }
 
-void TcpConnector::receiveMsg(Message *message) {
+void TcpConnector::receiveMsg(Message *item) {
 }
 
 void TcpConnector::connect(std::string peerName, uint16_t port) {

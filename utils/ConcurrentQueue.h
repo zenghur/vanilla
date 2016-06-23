@@ -25,9 +25,8 @@ template<typename T>
 bool ConcurrentQueue<T>::push_back(T &item) {
   MutexLockGuard guard(mutex_);
   try {
-    queue_.push_back(item);
-  }
-  catch(...) {
+    queue_.push_back(std::move(item));
+  } catch(...) {
     return false;
   }
   return true;
@@ -37,7 +36,7 @@ template<typename T>
 int ConcurrentQueue<T>::pop_front(T &item) {
   MutexLockGuard guard(mutex_);
   if (!queue_.empty()) {
-    item = queue_.front();
+    item = std::move(queue_.front());
     queue_.pop_front();
     return 0;
   }

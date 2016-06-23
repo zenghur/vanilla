@@ -2,9 +2,14 @@
 
 #include "Boss.h"
 
-using vanilla::Boss;
+#include <iostream>
 
-Boss::Boss() : processing_(false) {
+using vanilla::Boss;
+using std::cout;
+using std::endl;
+
+Boss::Boss(IOModule *module) : processing_(false),
+                               module_(module) {
 }
 
 void *Boss::loop(void *para) {
@@ -18,8 +23,9 @@ void *Boss::loop(void *para) {
     if (boss->pop_front(&item) == -1) {
       boss->sleep(20);
       continue;
+    } else {
+      std::cout << item.data_.get() << std::endl;
     }
-    delete [] item.data_;
   }
   return boss;
 }

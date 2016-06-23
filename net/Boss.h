@@ -8,10 +8,12 @@
 #include "Thread.h"
 
 namespace vanilla {
-    
+
+class IOModule;
+  
 class Boss {
  public:
-   Boss();
+   explicit Boss(IOModule *module);
    static void *loop(void *para);
    void start();
    void join();
@@ -27,6 +29,7 @@ class Boss {
     
  private:
    bool processing_;
+   IOModule *module_;
    ConcurrentQueue<Message> requestMessageQueue_;
    Thread thread_;
 };

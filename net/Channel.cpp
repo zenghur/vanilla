@@ -86,15 +86,15 @@ bool Channel::push_back(Message &item) {
   return responseMessageQueue_.push_back(item);
 }
 
-void Channel::onResponseMessage(Message *message) {
-  if (!message) {
+void Channel::onResponseMessage(Message *item) {
+  if (!item) {
     return;
   }
-  switch (message->type_) {
+  switch (item->type_) {
     case vanilla::MessageType::NET_MSG: {
-      TcpConnection *connection = getConnection(message->sessionID_);
+      TcpConnection *connection = getConnection(item->sessionID_);
       if (connection) {
-        connection->send(message->data_, message->size_);
+        connection->send(item->data_.get(), item->size_);
       }
       break;
     }
@@ -153,7 +153,7 @@ void Channel::canRead() {
 void Channel::canWrite() {
 }
 
-void Channel::receiveMsg(Message *message) {
+void Channel::receiveMsg(Message *item) {
 }
 
 void *Channel::loop(void *para) {
@@ -182,8 +182,8 @@ TcpConnection *Channel::getConnection(SessionIDDispatcher::SessionType sessionID
   return connection;
 }
 
-bool Channel::sendMessageToBoss(Message *message) {
-  return module_->sendMessageToBoss(message);
+bool Channel::sendMessageToBoss(Message *item) {
+  return module_->sendMessageToBoss(item);
 }
 
 void Channel::init(IOModule *module, int channelID) {

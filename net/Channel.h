@@ -30,12 +30,12 @@ class Channel : public IOEvent {
    void join();
    static void *loop(void *para);
    TcpConnection *getConnection(SessionIDDispatcher::SessionType sessionID);
-   bool sendMessageToBoss(Message *message);
+   bool sendMessageToBoss(Message *item);
   
  public:
    virtual void canRead();  // 接受连接请求
    virtual void canWrite();
-   virtual void receiveMsg(Message *message);
+   virtual void receiveMsg(Message *item);
    SessionIDDispatcher::SessionType generateSessionID();
    void sleep(int ms);
    bool isProcessing();
@@ -46,7 +46,7 @@ class Channel : public IOEvent {
    bool push_back(Message &item);
   
  public:
-   void onResponseMessage(Message *message);
+   void onResponseMessage(Message *item);
   
  private:
    bool processing_;
