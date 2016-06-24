@@ -5,8 +5,10 @@ project "Vanilla" -- project name
 	kind "ConsoleApp" -- what's the kind
 	language "C++" 
 	targetdir "bin/"
-	includedirs {"shared/**"}
+	includedirs {"shared/"}
 	includedirs {"net/"}
+	includedirs {"utils/"}
+	includedirs {"./"}
 
 	files {"*.cpp", "*.h"}
 	files {"utils/**.cpp"}

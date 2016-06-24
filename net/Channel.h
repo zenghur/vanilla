@@ -4,7 +4,7 @@
 #define NET_CHANNEL_H_
 
 #include "Poller.h"
-#include "Thread.h"
+#include "utils/Thread.h"
 #include "ConcurrentQueue.h"
 #include "Message.h"
 #include "IOEvent.h"
