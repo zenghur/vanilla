@@ -5,13 +5,12 @@
 
 #include "Poller.h"
 
+#include <vector>
+
 #ifdef __linux__
 #include <sys/epoll.h>
 
-#include <vector>
-
-
-class Epoll : public Poller {
+class Epoll : public vanilla::Poller {
  public:
   Epoll();
   virtual ~Epoll();
