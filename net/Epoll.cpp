@@ -76,7 +76,7 @@ void Epoll::poll() {
     if (events_[i].events & EPOLLIN) {
       io->canRead();
     }
-    if (events_[i].events & EPOLLIN || events[i].events & EPOLLERR) {
+    if (events_[i].events & EPOLLIN || events_[i].events & EPOLLERR) {
       io->canWrite();
     }
   }
