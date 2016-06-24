@@ -33,7 +33,7 @@ void Epoll::init() {
 
 void Epoll::addFd(int fd, PollerEventType mask, void *udata) {
   struct epoll_event event;
-  memset(&event, 0, sizeof(event);
+  memset(&event, 0, sizeof(event));
   if (mask & static_cast<PollerEventType>(PollerEvent::POLLER_IN)) {
     event.events |= EPOLLIN;
   }
@@ -41,7 +41,7 @@ void Epoll::addFd(int fd, PollerEventType mask, void *udata) {
     event.events |= EPOLLOUT;
   }
   event.data.ptr = udata;
-  if (epoll_ctl(epollfd_, EPOLL_CTL_ADD, fd, &events) == -1) {
+  if (epoll_ctl(epollfd_, EPOLL_CTL_ADD, fd, &event) == -1) {
     printError();
   }
 }
@@ -52,7 +52,7 @@ void Epoll::deleteFd(int fd, PollerEventType mask) {
          
 void Epoll::modFd(int fd, PollerEventType mask, void *udata) {
   struct epoll_event event;
-  memset(&event, 0, sizeof(event);
+  memset(&event, 0, sizeof(event));
   if (mask & static_cast<PollerEventType>(PollerEvent::POLLER_IN)) {
    event.events |= EPOLLIN;
   }
@@ -60,7 +60,7 @@ void Epoll::modFd(int fd, PollerEventType mask, void *udata) {
    event.events |= EPOLLOUT;
   }
   event.data.ptr = udata;
-  epoll_ctl(epollfd_, EPOLL_CTL_MOD, fd, &events);
+  epoll_ctl(epollfd_, EPOLL_CTL_MOD, fd, &event);
 }
 
 void Epoll::poll() {
@@ -69,14 +69,14 @@ void Epoll::poll() {
     printError();
   }
   for (auto i = 0; i < n; ++i) {
-    IOEvent *io = events_[i].data.ptr;
+    IOEvent *io = reinterpret_cast<IOEvent*>(events_[i].data.ptr);
     if (!io) {
       continue;
     }
-    if (events[i].events & EPOLLIN) {
+    if (events_[i].events & EPOLLIN) {
       io->canRead();
     }
-    if (events[i].events & EPOLLIN || events[i].events & EPOLLERR) {
+    if (events_[i].events & EPOLLIN || events[i].events & EPOLLERR) {
       io->canWrite();
     }
   }
