@@ -2,11 +2,10 @@
 
 #include "Boss.h"
 
-#include <iostream>
+#include "IOModule.h"
 
 using vanilla::Boss;
-using std::cout;
-using std::endl;
+using vanilla::IOModule;
 
 Boss::Boss(IOModule *module) : processing_(false),
                                module_(module) {
@@ -24,7 +23,7 @@ void *Boss::loop(void *para) {
       boss->sleep(20);
       continue;
     } else {
-      std::cout << item.data_.get() << std::endl;
+      boss->getModule()->sendMessageToChannel(&item);
     }
   }
   return boss;
@@ -56,4 +55,8 @@ bool Boss::push_back(Message *item) {
 
 void Boss::sleep(int ms) {
   thread_.sleep(ms);
+}
+
+IOModule *Boss::getModule() {
+  return module_;
 }

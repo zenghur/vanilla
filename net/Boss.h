@@ -22,6 +22,7 @@ class Boss {
    int pop_front(Message *item);
    bool push_back(Message *item);
    void sleep(int ms);
+   IOModule *getModule();
     
  private:
    Boss(const Boss &) = delete;

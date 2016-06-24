@@ -348,7 +348,7 @@ int TcpSocket::recv(IOEvent *event) {
     
     if (payLoadSize_ == 0) {
       std::copy(&recvBuf_[0], &recvBuf_[RCV_HEADER_SIZE], &payLoadSize_);
-      if (payLoadSize_ + RCV_HEADER_SIZE > RCV_BUF_SIZE) {
+      if (payLoadSize_ + RCV_HEADER_SIZE > RCV_BUF_SIZE || payLoadSize_ < 0) {
         return -1;
       }
     } else {
