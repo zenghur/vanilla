@@ -17,6 +17,9 @@ project "Vanilla" -- project name
 	files {"shared/glog/**.h"}
 	libdirs {"shared/libs/"}
 	--links {"glog"}
+	if os.get() == "linux" then
+	  links {"pthread"}
+	end
 	buildoptions {"-std=c++11"}
 	filter "configurations:Debug"
 		defines {"DEBUG"}
