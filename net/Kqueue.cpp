@@ -2,9 +2,6 @@
 
 #include "Kqueue.h"
 
-#include <unistd.h>
-#include <time.h>
-
 #include "Error.h"
 #include "DateTime.h"
 #include "IOEvent.h"
@@ -16,8 +13,7 @@ using vanilla::DateTime;
 
 #ifdef __APPLE__
 
-Kqueue::Kqueue(): kqfd_(-1) {
-  events_.resize(MAX_EVENTS);
+Kqueue::Kqueue(): kqfd_(-1), events_(MAX_EVENTS) {
 }
 
 Kqueue::~Kqueue() {
@@ -64,7 +60,7 @@ void Kqueue::deleteFd(int fd, PollerEventType mask) {
   }
 }
 
-// kevent不用判断返回值
+//  kevent不用判断返回值
 void Kqueue::modFd(int fd, PollerEventType mask, void *udata) {
   struct kevent event;
   if (static_cast<PollerEventType>(mask) & static_cast<PollerEventType>(PollerEvent::POLLER_IN)) {
@@ -94,8 +90,7 @@ void Kqueue::poll() {
       continue;
     }
     if ((events_[index].flags & EV_ERROR) || (events_[index].flags & EV_EOF)) {
-      ::close(events_[index].ident);
-      continue;
+      io->canWrite();
     } else if (events_[index].filter == EVFILT_READ) {
       io->canRead();
     } else if (events_[index].filter == EVFILT_WRITE) {
