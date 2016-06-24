@@ -19,7 +19,7 @@ using vanilla::DateTime;
 Epoll::Epoll(): epollfd_(-1), events_(MAX_EVENTS) {
 }
 
-Epoll::Epoll() {
+Epoll::~Epoll() {
   if (epollfd_ >= 0) {
     close(epollfd_);
   }
@@ -50,7 +50,7 @@ void Epoll::deleteFd(int fd, PollerEventType mask) {
   epoll_ctl(epollfd_, EPOLL_CTL_DEL, fd, NULL);
 }
          
-void Epoll::modFd(int fd, POLLER_EVENT event, void *udata) {
+void Epoll::modFd(int fd, PollerEventType mask, void *udata) {
   struct epoll_event event;
   memset(&event, 0, sizeof(event);
   if (mask & static_cast<PollerEventType>(PollerEvent::POLLER_IN)) {
@@ -70,7 +70,7 @@ void Epoll::poll() {
   }
   for (auto i = 0; i < n; ++i) {
     IOEvent *io = events_[i].data.ptr;
-    if (!!io) {
+    if (!io) {
       continue;
     }
     if (events[i].events & EPOLLIN) {

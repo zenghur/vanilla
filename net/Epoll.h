@@ -17,9 +17,9 @@ class Epoll : public vanilla::Poller {
   
  public:
    virtual void init();
-   virtual void addFd(int fd, POLLER_EVENT event, void *udata);
+   virtual void addFd(int fd, PollerEventType mask, void *udata);
    virtual void deleteFd(int fd, PollerEventType mask);
-   virtual void modFd(int fd, POLLER_EVENT event, void *udata);
+   virtual void modFd(int fd, PollerEventType mask, void *udata);
    virtual void poll();
   
  private:
