@@ -3,8 +3,6 @@
 #ifndef NET_POLLER_H_
 #define NET_POLLER_H_
 
-#include "Noncopyable.h"
-
 #include <unistd.h>
 #include <sys/types.h>
 
