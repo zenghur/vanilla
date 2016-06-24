@@ -94,7 +94,7 @@ std::shared_ptr<TcpSocket> TcpSocket::createListener(std::string ip, uint16_t po
 
   memset(&addr, 0, sizeof(addr));
   addr.sin_family = AF_INET;
-  addr.sin_port = htobe16(port);
+  addr.sin_port = vanilla_htobe16(port);
 
   int flag = inet_pton(AF_INET, ip.c_str(), &addr.sin_addr.s_addr);
   if (flag == -1) {
@@ -130,7 +130,7 @@ std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint
   struct sockaddr_in peerAddr;
   memset(&peerAddr, 0, sizeof(peerAddr));
   peerAddr.sin_family = AF_INET;
-  peerAddr.sin_port = htobe16(port);
+  peerAddr.sin_port = vanilla_htobe16(port);
 
   int flag = inet_pton(AF_INET, peerName.c_str(), &peerAddr.sin_addr.s_addr);
   if (flag == 0) {

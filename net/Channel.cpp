@@ -144,7 +144,7 @@ void Channel::canRead() {
     connection->init(this, clientFd, sessionID);
     connections_[currentConnectionIdx_] = connection;
     
-    int port = be16toh(clientAddr.sin_port);
+    int port = vanilla_be16toh(clientAddr.sin_port);
     std::string ip(inet_ntoa(clientAddr.sin_addr));
     std::cout << ip << ":" << port << std::endl;
   } while (true);

@@ -54,11 +54,11 @@ T ByteStream::read(std::size_t nBytes) {
   std::copy(getStartReadableAddr(), getStartReadableAddr() + sizeof(T), reinterpret_cast<char*>(&temp));
   readIndex_ += nBytes;
   if (nBytes == sizeof(int64_t)) {
-    return be64toh(temp);
+    return vanilla_be64toh(temp);
   } else if (nBytes == sizeof(int32_t)) {
-    return be32toh(temp);
+    return vanilla_be32toh(temp);
   } else if (nBytes == sizeof(int16_t)) {
-    return be16toh(temp);
+    return vanilla_be16toh(temp);
   } else {
     return temp;
   }
@@ -70,11 +70,11 @@ void ByteStream::write(T para) {
   guaranteeEnoughSpaceToWrite(len);
   T temp = 0;
   if (len == sizeof(int64_t)) {
-    temp = htobe64(para);
+    temp = vanilla_htobe64(para);
   } else if (len == sizeof(int32_t)) {
-    temp = htobe32(para);
+    temp = vanilla_htobe32(para);
   } else if (len == sizeof(int16_t)) {
-    temp = htobe16(para);
+    temp = vanilla_htobe16(para);
   }
   char *start = reinterpret_cast<char *>(&temp);
   std::copy(start, start + len, getStartWritableAddr());
