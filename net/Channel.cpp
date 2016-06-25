@@ -156,6 +156,9 @@ void Channel::canWrite() {
 void Channel::receiveMsg(Message *item) {
 }
 
+void Channel::close(vanilla::SessionIDDispatcher::SessionType sessionID) {
+}
+
 void *Channel::loop(void *para) {
   Channel *channel = reinterpret_cast<Channel *>(para);
   if (!channel) {

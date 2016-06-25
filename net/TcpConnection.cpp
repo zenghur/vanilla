@@ -68,6 +68,9 @@ void TcpConnection::receiveMsg(Message *item) {
   channel_->sendMessageToBoss(item);
 }
 
+void TcpConnection::close(vanilla::SessionIDDispatcher::SessionType sessionID) {
+}
+
 void TcpConnection::send(char *data, int len) {
   int ret = socket_->send(data, len);
   if (ret == -1) {

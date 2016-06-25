@@ -36,6 +36,7 @@ class Channel : public IOEvent {
    virtual void canRead();  // 接受连接请求
    virtual void canWrite();
    virtual void receiveMsg(Message *item);
+   virtual void close(vanilla::SessionIDDispatcher::SessionType sessionID);
    SessionIDDispatcher::SessionType generateSessionID();
    void sleep(int ms);
    bool isProcessing();
