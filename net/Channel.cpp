@@ -153,7 +153,7 @@ void Channel::canRead() {
 void Channel::canWrite() {
 }
 
-void Channel::receiveMsg(Message *item) {
+void Channel::receiveMsg(Message &item) {
 }
 
 void Channel::close(vanilla::SessionIDDispatcher::SessionType sessionID) {
@@ -185,7 +185,7 @@ TcpConnection *Channel::getConnection(SessionIDDispatcher::SessionType sessionID
   return connection;
 }
 
-bool Channel::sendMessageToBoss(Message *item) {
+bool Channel::sendMessageToBoss(Message &item) {
   return module_->sendMessageToBoss(item);
 }
 

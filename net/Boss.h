@@ -19,8 +19,8 @@ class Boss {
    void join();
    bool isProcessing();
    void setProcessing(bool flag);
-   int pop_front(Message *item);
-   bool push_back(Message *item);
+   int pop_front(Message &item);
+   bool push_back(Message &item);
    void sleep(int ms);
    IOModule *getModule();
     

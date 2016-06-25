@@ -19,11 +19,11 @@ void *Boss::loop(void *para) {
   boss->setProcessing(true);
   while (boss->isProcessing()) {
     Message item;
-    if (boss->pop_front(&item) == -1) {
+    if (boss->pop_front(item) == -1) {
       boss->sleep(20);
       continue;
     } else {
-      boss->getModule()->sendMessageToChannel(&item);
+      boss->getModule()->sendMessageToChannel(item);
     }
   }
   return boss;
@@ -45,12 +45,12 @@ void Boss::setProcessing(bool flag) {
   processing_ = flag;
 }
 
-int Boss::pop_front(Message *item) {
-  return requestMessageQueue_.pop_front(*item);
+int Boss::pop_front(Message &item) {
+  return requestMessageQueue_.pop_front(item);
 }
 
-bool Boss::push_back(Message *item) {
-  return requestMessageQueue_.push_back(*item);
+bool Boss::push_back(Message &item) {
+  return requestMessageQueue_.push_back(item);
 }
 
 void Boss::sleep(int ms) {

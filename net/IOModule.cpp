@@ -21,13 +21,10 @@ void IOModule::init(std::string ip, uint16_t port) {
   start();
 }
 
-void IOModule::sendMessageToChannel(Message *item) {
-  if (!item) {
-    return;
-  }
-  int channelID = SessionIDDispatcher::getChannelID(item->sessionID_);
+void IOModule::sendMessageToChannel(Message &item) {
+  int channelID = SessionIDDispatcher::getChannelID(item.sessionID_);
   if (channelID >= 0 && channelID < channels_.size()) {
-    channels_[channelID]->push_back(*item);
+    channels_[channelID]->push_back(item);
   }
 }
 
@@ -42,7 +39,7 @@ void IOModule::start() {
   boss_->join();
 }
 
-bool IOModule::sendMessageToBoss(Message *item) {
+bool IOModule::sendMessageToBoss(Message &item) {
   return boss_->push_back(item);
 }
 

@@ -30,12 +30,12 @@ class Channel : public IOEvent {
    void join();
    static void *loop(void *para);
    TcpConnection *getConnection(SessionIDDispatcher::SessionType sessionID);
-   bool sendMessageToBoss(Message *item);
+   bool sendMessageToBoss(Message &item);
   
  public:
    virtual void canRead();  // 接受连接请求
    virtual void canWrite();
-   virtual void receiveMsg(Message *item);
+   virtual void receiveMsg(Message &item);
    virtual void close(vanilla::SessionIDDispatcher::SessionType sessionID);
    SessionIDDispatcher::SessionType generateSessionID();
    void sleep(int ms);

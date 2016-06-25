@@ -19,8 +19,8 @@ class IOModule {
    IOModule() = default;
    void init(std::string ip, uint16_t port);
    void start();
-   bool sendMessageToBoss(Message *item);
-   void sendMessageToChannel(Message *item);
+   bool sendMessageToBoss(Message &item);
+   void sendMessageToChannel(Message &item);
   
  private:
    IOModule(const IOModule &) = delete;

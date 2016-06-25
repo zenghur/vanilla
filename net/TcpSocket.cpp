@@ -359,7 +359,7 @@ int TcpSocket::recv(IOEvent *event) {
       item.size_ = payLoadSize_ + RCV_HEADER_SIZE;
       std::copy(&*recvBuf_.begin(), &*recvBuf_.begin() + RCV_HEADER_SIZE + payLoadSize_, item.data_.get());
       if (event) {
-        event->receiveMsg(&item);
+        event->receiveMsg(item);
       }
       recvLen_ = 0;
       payLoadSize_ = 0;

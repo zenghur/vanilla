@@ -22,7 +22,7 @@ void TcpConnector::canRead() {
 void TcpConnector::canWrite() {
 }
 
-void TcpConnector::receiveMsg(Message *item) {
+void TcpConnector::receiveMsg(Message &item) {
 }
 
 void TcpConnector::close(vanilla::SessionIDDispatcher::SessionType sessionID) {
