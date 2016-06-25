@@ -36,7 +36,7 @@ class Channel : public IOEvent {
    virtual void canRead();  // 接受连接请求
    virtual void canWrite();
    virtual void receiveMsg(Message &item);
-   virtual void close(vanilla::SessionIDDispatcher::SessionType sessionID);
+   virtual void close(int fd);
    SessionIDDispatcher::SessionType generateSessionID();
    void sleep(int ms);
    bool isProcessing();
@@ -47,7 +47,7 @@ class Channel : public IOEvent {
    bool push_back(Message &item);
   
  public:
-   void onResponseMessage(Message *item);
+   void onResponseMessage(Message &item);
   
  private:
    bool processing_;

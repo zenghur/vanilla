@@ -25,7 +25,7 @@ void TcpConnector::canWrite() {
 void TcpConnector::receiveMsg(Message &item) {
 }
 
-void TcpConnector::close(vanilla::SessionIDDispatcher::SessionType sessionID) {
+void TcpConnector::close(int fd) {
 }
 
 void TcpConnector::connect(std::string peerName, uint16_t port) {

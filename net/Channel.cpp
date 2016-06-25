@@ -71,7 +71,7 @@ void Channel::setProcessing(bool flag) {
   item.sessionID_ = 0;
   item.data_ = nullptr;
   item.size_ = 0;
-  responseMessageQueue_.push_back(item);
+  push_back(item);
 }
 
 void Channel::sleep(int ms) {
@@ -86,15 +86,12 @@ bool Channel::push_back(Message &item) {
   return responseMessageQueue_.push_back(item);
 }
 
-void Channel::onResponseMessage(Message *item) {
-  if (!item) {
-    return;
-  }
-  switch (item->type_) {
+void Channel::onResponseMessage(Message &item) {
+  switch (item.type_) {
     case vanilla::MessageType::NET_MSG: {
-      TcpConnection *connection = getConnection(item->sessionID_);
+      TcpConnection *connection = getConnection(item.sessionID_);
       if (connection) {
-        connection->send(item->data_.get(), item->size_);
+        connection->send(item.data_.get(), item.size_);
       }
       break;
     }
@@ -105,7 +102,7 @@ void Channel::onResponseMessage(Message *item) {
       item.sessionID_ = 0;
       item.data_ = nullptr;
       item.size_ = 0;
-      responseMessageQueue_.push_back(item);
+      push_back(item);
       break;
     }
     default: {
@@ -123,22 +120,22 @@ void Channel::join() {
 }
 
 void Channel::canRead() {
-  do {
+
     struct sockaddr_in clientAddr;
     socklen_t len = sizeof(socklen_t);
     // non-blocking accept;
     int clientFd = ::accept(listener_->getListenerFd(), reinterpret_cast<struct sockaddr *>(&clientAddr), &len);
     if (clientFd < 0) {
       if (errno == EAGAIN || errno == EWOULDBLOCK)
-        break;
+        return;
       if (errno == EINTR) {
-        continue;
+        return;
       }
     }
     SessionIDDispatcher::SessionType sessionID = generateSessionID();
     if (sessionID == 0) {
       ::close(clientFd);
-      continue;
+      return;
     }
     std::shared_ptr<TcpConnection> connection = std::make_shared<TcpConnection>(poller_.get());
     connection->init(this, clientFd, sessionID);
@@ -147,7 +144,7 @@ void Channel::canRead() {
     int port = vanilla_be16toh(clientAddr.sin_port);
     std::string ip(inet_ntoa(clientAddr.sin_addr));
     std::cout << ip << ":" << port << std::endl;
-  } while (true);
+ 
 }
 
 void Channel::canWrite() {
@@ -156,7 +153,7 @@ void Channel::canWrite() {
 void Channel::receiveMsg(Message &item) {
 }
 
-void Channel::close(vanilla::SessionIDDispatcher::SessionType sessionID) {
+void Channel::close(int fd) {
 }
 
 void *Channel::loop(void *para) {
@@ -171,7 +168,7 @@ void *Channel::loop(void *para) {
       channel->sleep(20);
       continue;
     }
-    channel->onResponseMessage(&item);
+    channel->onResponseMessage(item);
   }
   return channel;
 }

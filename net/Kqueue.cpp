@@ -90,7 +90,7 @@ void Kqueue::poll() {
       continue;
     }
     if ((events_[index].flags & EV_ERROR) || (events_[index].flags & EV_EOF)) {
-      io->canWrite();
+      io->close(events_[index].ident);
     } else if (events_[index].filter == EVFILT_READ) {
       io->canRead();
     } else if (events_[index].filter == EVFILT_WRITE) {

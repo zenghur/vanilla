@@ -26,7 +26,7 @@ class TcpConnection : public IOEvent {
    virtual void canRead();
    virtual void canWrite();
    virtual void receiveMsg(Message &item);
-   virtual void close(vanilla::SessionIDDispatcher::SessionType sessionID);
+   virtual void close(int fd);
    void send(char *data, int len);
   
  private:

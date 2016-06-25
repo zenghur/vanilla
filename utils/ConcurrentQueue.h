@@ -3,7 +3,7 @@
 #ifndef  UTILS_CONCURRENTQUEUE_H_
 #define  UTILS_CONCURRENTQUEUE_H_
 
-#include <list>
+#include <deque>
 
 #include "Mutex.h"
 #include "MutexLockGuard.h"
@@ -17,7 +17,7 @@ class ConcurrentQueue {
    int size();
   
  private:
-   std::list<T> queue_;
+   std::deque<T> queue_;
    mutable Mutex mutex_;
 };
     

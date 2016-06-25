@@ -12,7 +12,7 @@ class IOEvent {
    virtual void canRead() = 0;
    virtual void canWrite() = 0;
    virtual void receiveMsg(Message &item) = 0;
-   virtual void close(vanilla::SessionIDDispatcher::SessionType sessionID) = 0;
+   virtual void close(int fd) = 0;
 };
 }  // namespace vanilla
 

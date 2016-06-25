@@ -68,7 +68,7 @@ void TcpConnection::receiveMsg(Message &item) {
   channel_->sendMessageToBoss(item);
 }
 
-void TcpConnection::close(vanilla::SessionIDDispatcher::SessionType sessionID) {
+void TcpConnection::close(int fd) {
 }
 
 void TcpConnection::send(char *data, int len) {
