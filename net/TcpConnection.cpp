@@ -7,6 +7,7 @@
 #include "TcpSocket.h"
 #include "Channel.h"
 #include "Poller.h"
+#include "SocketOption.h"
 
 using vanilla::TcpConnection;
 using vanilla::SessionIDDispatcher;
@@ -30,8 +31,13 @@ int TcpConnection::getConnectionFd() {
   }
 }
 
+void TcpConnection::setTcpNoDelay() {
+  SocketOption::setTcpNoDelay(getConnectionFd());
+}
+
 void TcpConnection::closeConnection() {
   socket_->close();
+  sessionID_ = 0;
 }
 
 Poller *TcpConnection::getPoller() {
@@ -69,6 +75,7 @@ void TcpConnection::receiveMsg(Message &item) {
 }
 
 void TcpConnection::close(int fd) {
+  closeConnection();
 }
 
 void TcpConnection::send(char *data, int len) {

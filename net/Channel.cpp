@@ -68,9 +68,6 @@ void Channel::setProcessing(bool flag) {
   processing_ = flag;
   Message item;
   item.type_ = vanilla::MessageType::TIMER_MSG;
-  item.sessionID_ = 0;
-  item.data_ = nullptr;
-  item.size_ = 0;
   push_back(item);
 }
 
@@ -91,7 +88,7 @@ void Channel::onResponseMessage(Message &item) {
     case vanilla::MessageType::NET_MSG: {
       TcpConnection *connection = getConnection(item.sessionID_);
       if (connection) {
-        connection->send(item.data_.get(), item.size_);
+        connection->send(&*item.data_.begin(), item.size_);
       }
       break;
     }
@@ -99,9 +96,6 @@ void Channel::onResponseMessage(Message &item) {
       poller_->poll();
       Message item;
       item.type_ = vanilla::MessageType::TIMER_MSG;
-      item.sessionID_ = 0;
-      item.data_ = nullptr;
-      item.size_ = 0;
       push_back(item);
       break;
     }
@@ -120,31 +114,28 @@ void Channel::join() {
 }
 
 void Channel::canRead() {
-
-    struct sockaddr_in clientAddr;
-    socklen_t len = sizeof(socklen_t);
-    // non-blocking accept;
-    int clientFd = ::accept(listener_->getListenerFd(), reinterpret_cast<struct sockaddr *>(&clientAddr), &len);
-    if (clientFd < 0) {
-      if (errno == EAGAIN || errno == EWOULDBLOCK)
-        return;
-      if (errno == EINTR) {
-        return;
-      }
-    }
-    SessionIDDispatcher::SessionType sessionID = generateSessionID();
-    if (sessionID == 0) {
-      ::close(clientFd);
+  SessionIDDispatcher::SessionType sessionID = generateSessionID();
+  if (sessionID == 0) {
+    return;
+  }
+  struct sockaddr_in clientAddr;
+  socklen_t len = sizeof(socklen_t);
+  // non-blocking accept;
+  int clientFd = ::accept(listener_->getListenerFd(), reinterpret_cast<struct sockaddr *>(&clientAddr), &len);
+  if (clientFd < 0) {
+    if (errno == EAGAIN || errno == EWOULDBLOCK)
+      return;
+    if (errno == EINTR) {
       return;
     }
-    std::shared_ptr<TcpConnection> connection = std::make_shared<TcpConnection>(poller_.get());
-    connection->init(this, clientFd, sessionID);
-    connections_[currentConnectionIdx_] = connection;
-    
-    int port = vanilla_be16toh(clientAddr.sin_port);
-    std::string ip(inet_ntoa(clientAddr.sin_addr));
-    std::cout << ip << ":" << port << std::endl;
- 
+  }
+  std::shared_ptr<TcpConnection> connection = std::make_shared<TcpConnection>(poller_.get());
+  connection->init(this, clientFd, sessionID);
+  connection->setTcpNoDelay();
+  connections_[currentConnectionIdx_].swap(connection);
+  int port = vanilla_be16toh(clientAddr.sin_port);
+  std::string ip(inet_ntoa(clientAddr.sin_addr));
+  std::cout << ip << ":" << port << std::endl;
 }
 
 void Channel::canWrite() {

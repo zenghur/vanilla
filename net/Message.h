@@ -17,9 +17,11 @@ struct Message {
   Message& operator = (const Message &item) = default;
   Message(Message &&item) = default;
   Message& operator = (Message &&item) = default;
+  ~Message() = default;
+  
   int type_;
   SessionIDDispatcher::SessionType sessionID_;
-  std::unique_ptr<char[]> data_;
+  std::vector<char> data_;
   int size_;
 };
 }  // namespace vanilla

@@ -157,8 +157,6 @@ std::shared_ptr<TcpSocket> TcpSocket::createConnector(std::string peerName, uint
 }
 
 int TcpSocket::nonBlockSend(char *data, size_t len) {
-  assert(isNonBlocking_);
-
   ssize_t totalLen = len;
   if (len > 0) {
     ssize_t ret;
@@ -185,7 +183,6 @@ int TcpSocket::nonBlockRecv(char *data, size_t len) {
   if (len > 0) {
       ssize_t ret;
       while ((ret = ::recv(sockfd_, data, len, 0)) != 0 && (len != 0)) {
-        std::cout << ret << " : bytes" << std::endl;
         if (ret == -1 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
           break;
         } else if (ret == -1 && errno == EINTR) {
@@ -355,9 +352,9 @@ int TcpSocket::recv(IOEvent *event) {
     } else {
       Message item;
       item.type_ = NET_MSG;
-      item.data_ = std::unique_ptr<char[]>(new char[payLoadSize_ + RCV_HEADER_SIZE]);
+      item.data_.resize(payLoadSize_ + RCV_HEADER_SIZE);
       item.size_ = payLoadSize_ + RCV_HEADER_SIZE;
-      std::copy(&*recvBuf_.begin(), &*recvBuf_.begin() + RCV_HEADER_SIZE + payLoadSize_, item.data_.get());
+      std::copy(&*recvBuf_.begin(), &*recvBuf_.begin() + RCV_HEADER_SIZE + payLoadSize_, &*item.data_.begin());
       if (event) {
         event->receiveMsg(item);
       }

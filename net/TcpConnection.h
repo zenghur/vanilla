@@ -20,6 +20,7 @@ class TcpConnection : public IOEvent {
    int getConnectionFd();
    SessionIDDispatcher::SessionType getSessionID();
    void closeConnection();
+   void setTcpNoDelay();
    Poller *getPoller();
   
  public:

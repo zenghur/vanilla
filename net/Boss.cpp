@@ -2,10 +2,15 @@
 
 #include "Boss.h"
 
+#include <sys/time.h>
+
+#include <iostream>
+
 #include "IOModule.h"
 
 using vanilla::Boss;
 using vanilla::IOModule;
+using namespace std;
 
 Boss::Boss(IOModule *module) : processing_(false),
                                module_(module) {

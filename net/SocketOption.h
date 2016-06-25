@@ -15,12 +15,14 @@ class SocketOption {
    static int setRcvBuf(int fd, int size);
    static int setSndTimeO(int fd, struct timeval val);
    static int setRcvTimeO(int fd, struct timeval val);
-    
+   static int setTcpNoDelay(int fd);
+  
  public:
    static int getSndBuf(int fd);
    static int getRcvBuf(int fd);
    static struct timeval getSndTimeO(int fd);
    static struct timeval getRcvTimeO(int fd);
+   static int getTcpNoDelay(int fd);
 };
 }  // namespace vanilla
 

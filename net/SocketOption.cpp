@@ -2,7 +2,11 @@
 
 #include "SocketOption.h"
 
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+
 #include "Error.h"
+
 
 using vanilla::SocketOption;
 
@@ -65,6 +69,25 @@ int SocketOption::setRcvTimeO(int fd, struct timeval val) {
     printError();
   }
   return flag;
+}
+
+int SocketOption::setTcpNoDelay(int fd) {
+  int optval = 1;
+  int flag = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(optval));
+  if (flag < 0) {
+    printError();
+  }
+  return flag;
+}
+
+int SocketOption::getTcpNoDelay(int fd) {
+  int optval;
+  socklen_t len;
+  int flag = getsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &optval, &len);
+  if (flag < 0) {
+    printError();
+  }
+  return optval;
 }
 
 struct timeval SocketOption::getSndTimeO(int fd) {
