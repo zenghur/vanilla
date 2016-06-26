@@ -16,17 +16,17 @@ Thread::Thread(): joinable_(true),
 }
 
 void Thread::start(ThreadStartFun fun, void *para) {
-  pthread_create(&handle_, NULL, fun, para);
+  pthread_create(&handle_, nullptr, fun, para);
 }
 
 void Thread::sleep(int ms) {
   struct timeval val = DateTime::msToTimeval(ms);
-  select(0, NULL, NULL, NULL, &val);
+  select(0, nullptr, nullptr, nullptr, &val);
 }
 
 void Thread::join() {
   assert(joinable_);
-  if (!pthread_join(handle_, NULL)) {
+  if (!pthread_join(handle_, nullptr)) {
       printError();
   }
   joinable_ = false;
@@ -42,7 +42,7 @@ void Thread::detach() {
 }
 
 void Thread::exit() {
-  pthread_exit(NULL);
+  pthread_exit(nullptr);
 }
 
 pthread_t Thread::getId() {

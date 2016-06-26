@@ -15,7 +15,7 @@ class ConcurrentQueue {
    bool push_back(T &item);
    bool push_back(T &&item);
    int pop_front(T &item);
-   int size();
+   int size() const;
   
  private:
    std::list<T> queue_;
@@ -56,7 +56,7 @@ int ConcurrentQueue<T>::pop_front(T &item) {
 }
 
 template<typename T>
-int vanilla::ConcurrentQueue<T>::size() {
+int vanilla::ConcurrentQueue<T>::size() const {
   MutexLockGuard guard(mutex_);
   return queue_.size();
 }

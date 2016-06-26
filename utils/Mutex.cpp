@@ -2,12 +2,12 @@
 
 #include "Mutex.h"
 
-#include <iostream>
+#include "MutexLockGuard.h"
 
 using vanilla::Mutex;
 
 Mutex::Mutex() {
-  pthread_mutex_init(&mutex_, NULL);
+  pthread_mutex_init(&mutex_, nullptr);
 }
 
 Mutex::~Mutex() {
@@ -20,4 +20,8 @@ void Mutex::lock() {
 
 void Mutex::unLock() {
   pthread_mutex_unlock(&mutex_);
+}
+
+pthread_mutex_t &Mutex::getPthreadMutex() {
+  return mutex_;
 }

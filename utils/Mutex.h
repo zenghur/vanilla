@@ -16,10 +16,13 @@ class Mutex {
    ~Mutex();
    void lock();
    void unLock();
+   pthread_mutex_t &getPthreadMutex();
   
  private:
    Mutex(const Mutex &) = delete;
    Mutex & operator = (const Mutex &) = delete;
+   Mutex(Mutex &&mutex) = delete;
+   Mutex&& operator = (Mutex &&mutex) = delete;
    pthread_mutex_t mutex_;
 };
 }  // namespace vanilla

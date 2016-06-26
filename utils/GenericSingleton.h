@@ -32,7 +32,7 @@ class GenericSingleton {
 };
   
 template <typename T>
-T* GenericSingleton<T>::instance_ = NULL;
+T* GenericSingleton<T>::instance_ = nullptr;
     
 template <typename T>
 pthread_once_t GenericSingleton<T>::control_ = PTHREAD_ONCE_INIT;
@@ -53,7 +53,7 @@ template <typename T>
 void GenericSingleton<T>::destroy() {
   if (instance_) {
     delete instance_;
-    instance_ = NULL;
+    instance_ = nullptr;
   }
 }
 }  // namespace vanilla

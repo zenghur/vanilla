@@ -47,7 +47,7 @@ void Epoll::addFd(int fd, PollerEventType mask, void *udata) {
 }
 
 void Epoll::deleteFd(int fd, PollerEventType mask) {
-  epoll_ctl(epollfd_, EPOLL_CTL_DEL, fd, NULL);
+  epoll_ctl(epollfd_, EPOLL_CTL_DEL, fd, nullptr);
 }
          
 void Epoll::modFd(int fd, PollerEventType mask, void *udata) {
