@@ -21,3 +21,7 @@ struct timeval DateTime::msToTimeval(int ms) {
   val.tv_usec = (ms % 1000) * static_cast<int>(pow(10, 3));
   return val;
 }
+
+uint64_t DateTime::timevalToUs(struct timeval &val) {
+  return val.tv_sec * kMicrosecondsPerSecond + val.tv_usec;
+}
