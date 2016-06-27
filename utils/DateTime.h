@@ -12,7 +12,7 @@ class DateTime {
  public:
    static struct timespec msToTimespec(int ms);
    static struct timeval msToTimeval(int ms);
-   static uint64_t timevalToUs(struct timeval &val);
+   static uint64_t timevalToUs(struct timeval &val);  // microseconds
   
  public:
    static constexpr int kNanosecondsPerSecond = 1000 * 1000 * 1000;

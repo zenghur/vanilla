@@ -28,10 +28,10 @@ bool Timestamp::isValid() {
 }
 
 std::string Timestamp::getHumanReadableFormat() {
-  char buf[50];
+  char buf[32];
   struct tm datetime;
   time_t time = static_cast<time_t>(epochTimeInMicroSeconds_ / DateTime::kMicrosecondsPerSecond);
   localtime_r(&time, &datetime);
-  strftime(buf, 50, "%Y-%m-%d %H:%M:%S", &datetime);
+  strftime(buf, 50, "%Y-%m-%d %H:%M:%S", &datetime); // notice the 3rd argument must be a null-terminated character string literal.
   return std::move(std::string(buf));
 }
