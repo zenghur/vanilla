@@ -9,6 +9,7 @@
 
 namespace vanilla {
 void printError(std::string reason = "");
+void threadError(int status);
 }  // namespace vanilla
 
 #endif  // UTILS_ERROR_H_

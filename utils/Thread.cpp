@@ -26,8 +26,9 @@ void Thread::sleep(int ms) {
 
 void Thread::join() {
   assert(joinable_);
-  if (!pthread_join(handle_, nullptr)) {
-      printError();
+  int status = pthread_join(handle_, nullptr);
+  if (status != 0) {
+    threadError(status);
   }
   joinable_ = false;
   detached_ = false;
@@ -36,7 +37,10 @@ void Thread::join() {
 
 void Thread::detach() {
   assert(detached_);
-  pthread_detach(handle_);
+  int status = pthread_detach(handle_);
+  if (status != 0) {
+    threadError(status);
+  }
   joinable_ = false;
   detached_ = false;
 }
@@ -50,7 +54,10 @@ pthread_t Thread::getId() {
 }
 
 void Thread::cancel() {
-  pthread_cancel(handle_);
+  int status  = pthread_cancel(handle_);
+  if (status != 0) {
+    threadError(status);
+  }
 }
 
 

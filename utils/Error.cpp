@@ -8,10 +8,11 @@
 #include <stdlib.h>
 
 void vanilla::printError(std::string reason) {
-  if (reason.empty()) {
-    perror(strerror(errno));
-  } else {
-    perror(reason.c_str());
-  }
+  perror(reason.c_str());
+  exit(EXIT_FAILURE);
+}
+
+void vanilla::threadError(int status) {
+  fprintf(stderr, "error %d:  %s\n", status, strerror(status));
   exit(EXIT_FAILURE);
 }
