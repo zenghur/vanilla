@@ -12,6 +12,7 @@ void vanilla::printError(std::string reason) {
   exit(EXIT_FAILURE);
 }
 
+// pthread functions don't set errno.
 void vanilla::threadError(int status) {
   fprintf(stderr, "error %d:  %s\n", status, strerror(status));
   exit(EXIT_FAILURE);

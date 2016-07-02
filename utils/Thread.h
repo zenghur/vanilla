@@ -3,6 +3,8 @@
 #ifndef UTILS_THREAD_H_
 #define UTILS_THREAD_H_
 
+#include "ThreadAttribute.h"
+
 #include <pthread.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -26,6 +28,7 @@ class Thread {
    bool joinable_;
    bool detached_;
    pthread_t handle_;
+   ThreadAttribute attr_;
 };
 }  // namespace vanilla
 
