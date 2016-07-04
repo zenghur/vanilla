@@ -34,7 +34,6 @@ void Thread::join() {
   detached_ = false;
 }
 
-
 void Thread::detach() {
   assert(detached_);
   int status = pthread_detach(handle_);
